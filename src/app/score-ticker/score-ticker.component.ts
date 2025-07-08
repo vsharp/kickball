@@ -1,6 +1,6 @@
-import { Component, Input, input, InputSignal, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, input, InputSignal, OnChanges, Output, SimpleChanges, EventEmitter } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { InningPosition, TeamFieldingType, TeamVisitationType } from '../types';
+import { CountType, InningPosition, TeamFieldingType, TeamVisitationType } from '../types';
 
 @Component({
   selector: 'app-score-ticker',
@@ -18,7 +18,9 @@ export class ScoreTickerComponent implements OnChanges {
   // 'offense' | 'defense'
   @Input() teamVisitation: TeamVisitationType = 'home';
 
-  @Input() countType!: 'strikes' | 'balls' | 'fouls' | 'outs' | 'scores';
+  @Input() countType!: CountType;
+
+  @Output() tickerClicked = new EventEmitter();
 
   constructor() {
   }
@@ -33,6 +35,8 @@ export class ScoreTickerComponent implements OnChanges {
       (this.inningPosition === 'bottom' && this.teamVisitation === 'home')
     ) {
       this.currentTeamFieldingType = 'offense';
+    } else {
+      this.currentTeamFieldingType = 'defense';
     }
   }
 
@@ -51,4 +55,10 @@ export class ScoreTickerComponent implements OnChanges {
     }
   }
 
+  onTickerClick(evt: Event) {
+    let data: TickerClickData = { countType: this.countType, currentTeamFieldingType: this.currentTeamFieldingType };
+    this.tickerClicked.emit(data);
+  }
 }
+
+export type TickerClickData = { countType: CountType; currentTeamFieldingType: TeamFieldingType };

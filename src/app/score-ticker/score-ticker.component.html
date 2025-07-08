@@ -1,4 +1,4 @@
-<div class="score-ticker count-type-{{countType}}">
+<div class="score-ticker count-type-{{countType}}" (click)="onTickerClick($event)">
 
   @if (currentTeamFieldingType === 'offense') {
     <div class="team-on-offense">

@@ -1,8 +1,8 @@
 
 <div class="score-inning">
   <div class="scores">
-    <app-score-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="inningPosition" countType="scores" />
-    <app-score-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="inningPosition" countType="scores" />
+    <app-score-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="inningPosition" countType="scores" (tickerClicked)="onScoreClick($event)" />
+    <app-score-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="inningPosition" countType="scores" (tickerClicked)="onScoreClick($event)" />
   </div>
 
   <div class="inning">
@@ -12,18 +12,18 @@
 </div>
 
 <div class="pitch-count">
-  <app-score-ticker [score]="currentBallsCount" countType="balls" />
-  <app-score-ticker [score]="currentStrikesCount" countType="strikes" />
-  <app-score-ticker [score]="currentFoulsCount"  countType="fouls" />
-  <app-score-ticker class="outs" [score]="numberOfOuts" countType="outs" />
+  <app-score-ticker [score]="currentBallsCount" countType="balls" (tickerClicked)="onTickerClick($event)" />
+  <app-score-ticker [score]="currentStrikesCount" countType="strikes" (tickerClicked)="onTickerClick($event)" />
+  <app-score-ticker [score]="currentFoulsCount"  countType="fouls" (tickerClicked)="onTickerClick($event)" />
+  <app-score-ticker class="outs" [score]="currentNumberOfOuts" countType="outs" (tickerClicked)="onTickerClick($event)" />
 </div>
 
 <div class="runner-scored">
-  <button mat-button="filled">Runner Scored</button>
+  <button mat-button="filled" (click)="onRunnerScored()">Runner Scored</button>
 </div>
 
 <div class="kicker-is-safe">
-  <button mat-button="filled">Kicker is safe!</button>
+  <button mat-button="filled" (click)="onKickerSafe()">Kicker is safe!</button>
 </div>
 
 <div class="game-clock">
