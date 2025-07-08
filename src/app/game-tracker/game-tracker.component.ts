@@ -3,10 +3,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { ScoreTickerComponent } from '../score-ticker/score-ticker.component';
 import { InningTickerComponent } from '../inning-ticker/inning-ticker.component';
 import { MatButtonModule } from '@angular/material/button';
+import { TimeRemainingPipe } from '../time-remaining.pipe';
 
 @Component({
   selector: 'app-game-tracker',
-  imports: [MatIconModule, ScoreTickerComponent, InningTickerComponent, MatButtonModule],
+  imports: [MatIconModule, ScoreTickerComponent, InningTickerComponent, MatButtonModule, TimeRemainingPipe],
   templateUrl: './game-tracker.component.html',
   styleUrl: './game-tracker.component.scss'
 })
@@ -19,9 +20,19 @@ export class GameTrackerComponent {
   public currentStrikesCount = 0;
   public currentFoulsCount = 0;
   public numberOfOuts = 0;
-  public timeRemaining = 162000;
+  public timeRemaining = 2700000;
+
+  timeRemainingId!: NodeJS.Timeout;
 
   constructor() {}
 
-
+  toggleTimeRemaining() {
+    if (this.timeRemainingId) {
+      clearInterval(this.timeRemainingId);
+    } else {
+      this.timeRemainingId = setInterval(() => {
+        this.timeRemaining -= 1000;
+      }, 1000);
+    }
+  }
 }

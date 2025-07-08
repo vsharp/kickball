@@ -28,7 +28,7 @@
 
 <div class="game-clock">
     <div>Game Clock</div>
-    <button mat-button="filled" class="time-remaining">{{timeRemaining}}</button>
+    <button mat-button="filled" class="time-remaining" (click)="toggleTimeRemaining()">{{timeRemaining | timeRemaining}}</button>
 </div>
 
 <div class="edits">
