@@ -1,0 +1,43 @@
+
+<div class="score-inning">
+  <div class="scores">
+    <app-score-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="inningPosition" countType="scores" />
+    <app-score-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="inningPosition" countType="scores" />
+  </div>
+
+  <div class="inning">
+    <app-inning-ticker [inningPosition]="inningPosition" [currentInning]="currentInning" />
+  </div>
+
+</div>
+
+<div class="pitch-count">
+  <app-score-ticker [score]="currentBallsCount" countType="balls" />
+  <app-score-ticker [score]="currentStrikesCount" countType="strikes" />
+  <app-score-ticker [score]="currentFoulsCount"  countType="fouls" />
+  <app-score-ticker class="outs" [score]="numberOfOuts" countType="outs" />
+</div>
+
+<div class="runner-scored">
+  <button mat-button="filled">Runner Scored</button>
+</div>
+
+<div class="kicker-is-safe">
+  <button mat-button="filled">Kicker is safe!</button>
+</div>
+
+<div class="game-clock">
+    <div>Game Clock</div>
+    <button mat-button="filled" class="time-remaining">{{timeRemaining}}</button>
+</div>
+
+<div class="edits">
+  <button matFab extended>
+    <div>Undo</div>
+    <div><mat-icon>undo</mat-icon></div>
+  </button>
+  <button matFab extended>
+    <div>Redo</div>
+    <div><mat-icon>redo</mat-icon></div>
+  </button>
+</div>

@@ -1,0 +1,17 @@
+<div class="score-ticker count-type-{{countType}}">
+
+  @if (currentTeamFieldingType === 'offense') {
+    <div class="team-on-offense">
+      <mat-icon fontIcon="arrow_drop_down" />
+    </div>
+  }
+
+  @if (countType === 'scores') {
+    <div class="team-visitation">{{teamVisitation === 'home' ? 'Home' : 'Away'}}</div>
+  } @else {
+    <div class="count-type">{{ getCountTypeLabel() }}</div>
+  }
+
+  <div class="score">{{score}}</div>
+
+</div>
