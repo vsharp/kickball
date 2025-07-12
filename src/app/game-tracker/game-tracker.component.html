@@ -2,8 +2,8 @@
 <div class="score-inning">
 
   <div class="scores">
-    <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="inningPosition" countType="scores" (tickerClicked)="onScoreClick($event)" />
-    <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="inningPosition" countType="scores" (tickerClicked)="onScoreClick($event)" />
+    <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="inningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
+    <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="inningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
   </div>
 
   <div class="inning">
@@ -13,10 +13,10 @@
 </div>
 
 <div class="pitch-count">
-  <app-ticker [score]="currentBallsCount" countType="balls" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker [score]="currentStrikesCount" countType="strikes" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker [score]="currentFoulsCount"  countType="fouls" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker class="outs" [score]="currentNumberOfOuts" countType="outs" (tickerClicked)="onTickerClick($event)" />
+  <app-ticker [score]="currentBallsCount" countType="ball" (tickerClicked)="onTickerClick($event)" />
+  <app-ticker [score]="currentStrikesCount" countType="strike" (tickerClicked)="onTickerClick($event)" />
+  <app-ticker [score]="currentFoulsCount"  countType="foul" (tickerClicked)="onTickerClick($event)" />
+  <app-ticker class="out" [score]="currentNumberOfOuts" countType="out" (tickerClicked)="onTickerClick($event)" />
 </div>
 
 <div class="runner-scored">
@@ -33,11 +33,11 @@
 </div>
 
 <div class="edits">
-  <button mat-fab extended >
+  <button mat-fab extended (click)="handleEdits('undo')">
     <div>Undo</div>
     <div><mat-icon>undo</mat-icon></div>
   </button>
-  <button mat-fab extended >
+  <button mat-fab extended (click)="handleEdits('redo')">
     <div>Redo</div>
     <div><mat-icon>redo</mat-icon></div>
   </button>

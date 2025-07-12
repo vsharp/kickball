@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RulesSettings } from './types';
+import { RulesSettings } from '../types';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,6 @@ export class SettingsService {
 
   constructor() {
     const mergedSettings = this.getSettings();
-    // console.log('mergedSettings', mergedSettings);
 
     this.timeRemaining = mergedSettings.timeRemaining;
     this.innings = mergedSettings.innings;

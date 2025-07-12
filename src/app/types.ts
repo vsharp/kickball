@@ -4,7 +4,15 @@ export type TeamVisitationType = 'home' | 'away';
 
 export type TeamFieldingType = 'offense' | 'defense';
 
-export type CountType = 'strikes' | 'balls' | 'fouls' | 'outs' | 'scores';
+export type CountType = 'strike' | 'ball' | 'foul' | 'out' | 'score';
+
+export enum CountTypes {
+    strike,
+    ball,
+    foul,
+    out,
+    score,
+}
 
 // export type RulesSettings = 'timeRemaining' | 'innings' | 'startingBallCount' | 'startingStrikeCount';
 
@@ -14,3 +22,12 @@ export interface RulesSettings {
     startingBallCount: number,
     startingStrikeCount: number,
 }
+
+export type InGameUserActionType = CountType & 'inning';
+
+export interface InGameUserAction {
+    action: InGameUserActionType,
+    value: number,
+}
+
+export type EditType = 'undo' | 'redo';
