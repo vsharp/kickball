@@ -16,3 +16,18 @@
 .runner-scored, .kicker-is-safe, .game-clock, .edits {
   margin-top: 10px;
 }
+
+.time-remaining {
+  display: flex;
+  align-items: center;
+}
+
+.edits button {
+  margin-left: 5px;
+}
+
+app-ticker {
+  margin: 2px;
+}
+
+

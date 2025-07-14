@@ -7,11 +7,11 @@ export type TeamFieldingType = 'offense' | 'defense';
 export type CountType = 'strike' | 'ball' | 'foul' | 'out' | 'score';
 
 export enum CountTypes {
-    strike,
-    ball,
-    foul,
-    out,
-    score,
+    strike = 'strike',
+    ball = 'ball',
+    foul = 'foul',
+    out = 'out',
+    score = 'score',
 }
 
 // export type RulesSettings = 'timeRemaining' | 'innings' | 'startingBallCount' | 'startingStrikeCount';
@@ -21,9 +21,11 @@ export interface RulesSettings {
     innings: number,
     startingBallCount: number,
     startingStrikeCount: number,
+    startingFoulCount: number,
 }
 
-export type InGameUserActionType = CountType & 'inning';
+export type InGameUserActionType = CountType | 'inning';
+// export type InGameUserActionType<T extends CountType> = T & 'inning';
 
 export interface InGameUserAction {
     action: InGameUserActionType,

@@ -24,13 +24,14 @@ export class GameTrackerComponent {
   public currentFoulsCount = 0;
   public currentNumberOfOuts = 0;
 
-  timeRemainingId!: NodeJS.Timeout;
+  timeRemainingId!: NodeJS.Timeout | null;
 
   //configurable settings
   public timeRemaining = 2700000; //2700000 = 45min
   maxInnings = 5;
   startingBallCount = 0;
   startingStrikeCount = 0;
+  startingFoulCount = 0;
 
   settingsService = inject(SettingsService);
   editsService = inject(EditsTrackerService);
@@ -40,13 +41,15 @@ export class GameTrackerComponent {
     this.timeRemaining = this.settingsService.getTimeRemaining();
     this.startingBallCount = this.settingsService.getStartingBallCount();
     this.startingStrikeCount = this.settingsService.getStartingStrikeCount();
+    this.startingFoulCount = this.settingsService.getStartingFoulCount();
 
-    this.resetPitchCount();
+    this.resetBallCount();
   }
 
   toggleTimeRemaining() {
     if (this.timeRemainingId) {
       clearInterval(this.timeRemainingId);
+      this.timeRemainingId = null;
     } else {
       this.timeRemainingId = setInterval(() => {
         this.timeRemaining -= 1000;
@@ -65,15 +68,15 @@ export class GameTrackerComponent {
     switch (countType) {
       case "ball":
         if (this.currentBallsCount >= 3) {
-          this.resetPitchCount();
+          this.resetBallCount();
         } else {
           this.currentBallsCount += 1;
+          this.editsService.pushAction('ball', 1);
         }
-        this.editsService.pushAction('ball', 1);
         break;
       case "strike":
         if (this.currentStrikesCount >= 2) {
-          this.resetPitchCount();
+          this.resetBallCount();
           this.editsService.pushAction('strike', 1);
           if (this.currentNumberOfOuts < 2) {
             this.currentNumberOfOuts += 1;
@@ -88,11 +91,12 @@ export class GameTrackerComponent {
         break;
       case "foul":
         if (this.currentFoulsCount >= 3) {
-          this.resetPitchCount();
+          this.resetBallCount();
           this.editsService.pushAction('foul', 1);
           if (this.currentNumberOfOuts < 2) {
             this.currentNumberOfOuts += 1;
             this.editsService.pushAction('foul', 1);
+            this.editsService.pushAction('out', 1);
           } else {
             this.goToNextInning();
           }
@@ -103,12 +107,12 @@ export class GameTrackerComponent {
         break;
       case "out":
         if (this.currentNumberOfOuts >= 2) {
-          this.resetPitchCount();
+          this.resetBallCount();
           this.goToNextInning();
         } else {
           this.currentNumberOfOuts += 1;
+          this.editsService.pushAction('out', 1);
         }
-        this.editsService.pushAction('out', 1);
     }
   }
 
@@ -116,20 +120,21 @@ export class GameTrackerComponent {
     this.inningPosition = this.inningPosition === 'bottom' ? 'top' : 'bottom';
     if (this.inningPosition === 'top' ) {
       this.currentInning++;
+      this.editsService.pushAction('inning', 1);
     }
     this.currentNumberOfOuts = 0;
   }
 
   onRunnerScored() {
-    this.resetPitchCount();
+    this.resetBallCount();
     this.offenseScored();
   }
 
   onKickerSafe() {
-    this.resetPitchCount();
+    this.resetBallCount();
   }
 
-  resetPitchCount() {
+  resetBallCount() {
     this.currentBallsCount = this.startingBallCount;
     this.currentStrikesCount = this.startingStrikeCount;
     this.currentFoulsCount = 0;
@@ -142,12 +147,12 @@ export class GameTrackerComponent {
       this.homeTeamScore += 1;
     }
     this.editsService.pushAction('score', 1);
+    // this.editsService.pushAction(CountTypes.strike, 1);
   }
 
   handleEdits(editType: EditType) {
     const userAction = this.editsService.traverseActions(editType);
     let incrementBy = 1;
-    console.log('action', userAction);
     if (!userAction) {
       return;
     }

@@ -29,7 +29,12 @@
 
 <div class="game-clock">
     <div>Game Clock</div>
-    <button mat-flat-button class="time-remaining" (click)="toggleTimeRemaining()">{{timeRemaining | timeRemaining}}</button>
+    <button mat-flat-button (click)="toggleTimeRemaining()">
+      <div class="time-remaining">
+        <div><mat-icon>{{timeRemainingId ? 'pause' : 'play_arrow'}}</mat-icon></div>
+        <div>{{timeRemaining | timeRemaining}}</div>
+        </div>
+    </button>
 </div>
 
 <div class="edits">

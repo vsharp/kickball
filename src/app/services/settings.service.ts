@@ -7,8 +7,9 @@ import { RulesSettings } from '../types';
 export class SettingsService {
   timeRemaining: number = 2700000;
   innings = 5;
-  startingBallCount = 1
-  startingStrikeCount = 1
+  startingBallCount = 1;
+  startingStrikeCount = 1;
+  startingFoulCount = 0;
   storageKey = 'rules_settings';
 
   constructor() {
@@ -18,6 +19,7 @@ export class SettingsService {
     this.innings = mergedSettings.innings;
     this.startingBallCount = mergedSettings.startingBallCount;
     this.startingStrikeCount = mergedSettings.startingStrikeCount;
+    this.startingFoulCount = mergedSettings.startingFoulCount;
   }
 
   getTimeRemaining() {
@@ -36,6 +38,10 @@ export class SettingsService {
     return this.startingStrikeCount;
   }
 
+  getStartingFoulCount() {
+    return this.startingFoulCount;
+  }
+
   getSettings(): RulesSettings {
     const storedSettings = JSON.parse(<string>localStorage.getItem(this.storageKey));
     const mergedSettings = Object.assign(this, storedSettings);
@@ -45,8 +51,8 @@ export class SettingsService {
   }
 
   saveSettings(settings: RulesSettings) {
-    const { timeRemaining, innings, startingBallCount, startingStrikeCount } = this;
-    const mergedSettings = Object.assign(settings, { timeRemaining, innings, startingBallCount, startingStrikeCount });
+    const { timeRemaining, innings, startingBallCount, startingStrikeCount, startingFoulCount } = this;
+    const mergedSettings = Object.assign(settings, { timeRemaining, innings, startingBallCount, startingStrikeCount, startingFoulCount });
 
     localStorage.setItem(this.storageKey, JSON.stringify(mergedSettings));
   }

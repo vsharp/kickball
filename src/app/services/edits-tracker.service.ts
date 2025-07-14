@@ -10,20 +10,15 @@ export class EditsTrackerService {
 
   constructor() { }
 
-  // pushAction(action: InGameUserActionType, value: number) {
-  pushAction(action: string, value: number) {
-    console.log('this.currentIndex', this.currentIndex);
-    console.log('this.actions', this.actions);
+  pushAction(action: InGameUserActionType, value: number) {
+    console.log('this.currentIndex', this.currentIndex, this.actions.length);
     if (this.currentIndex < this.actions.length - 1) {
-      console.log('<', this.currentIndex, this.actions.slice(0, this.currentIndex));
-      this.actions = this.actions.slice(0, this.currentIndex + 1
-      );
-      console.log('< this.actions', this.actions);
-
+      //User trying to go back in time and change things like they never happened before
+      //Slice the array where the crime happened and let's go on about our business
+      this.actions = this.actions.slice(0, this.currentIndex + 1);
     }
-    this.actions.push(<InGameUserAction>{ action, value });
+    this.actions.push({ action, value });
     this.currentIndex++;
-    console.log('this. +', this.currentIndex, this.actions);
   }
 
   popAction(): InGameUserAction | null {
@@ -34,20 +29,20 @@ export class EditsTrackerService {
     } else {
       return null;
     }
-    // return this.actions.length > 0 ? this.actions.pop() : null;
   }
 
   traverseActions(editType: EditType) {
-    console.log('this.currentIndex', this.currentIndex);
-    console.log('this.actions', this.actions);
+    console.log('this.currentIndex', this.currentIndex, this.actions);
     let action: InGameUserAction | null = null;
     if (editType === 'undo') {
-      if (this.currentIndex > 0) {
+      if (this.currentIndex > -1) {
         action = this.actions[this.currentIndex--];
+        console.log('undo', action);
       }
     } else {
       if (this.currentIndex < this.actions.length - 1) {
-        action = this.actions[this.currentIndex++];
+        action = this.actions[++this.currentIndex];
+        console.log('redo', action);
       }
     }
 
