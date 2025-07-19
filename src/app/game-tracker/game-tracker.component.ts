@@ -6,11 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { TimeRemainingPipe } from '../pipes/time-remaining.pipe';
 import { SettingsService } from "../services/settings.service";
 import { EditsTrackerService } from "../services/edits-tracker.service";
-import { CountTypes, EditType, InGameUserAction, InGameUserActionType } from "../types";
+import { CountTypes, EditType, InGameUserAction, InGameUserActionType, InningPosition } from "../types";
+import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-game-tracker',
-  imports: [MatIconModule, TickerComponent, InningTickerComponent, MatButtonModule, TimeRemainingPipe],
+  imports: [MatIconModule, TickerComponent, InningTickerComponent, MatButtonModule, TimeRemainingPipe, NgForOf],
   templateUrl: './game-tracker.component.html',
   styleUrl: './game-tracker.component.scss'
 })
@@ -23,27 +24,43 @@ export class GameTrackerComponent {
   public currentStrikesCount = 0;
   public currentFoulsCount = 0;
   public currentNumberOfOuts = 0;
+  public canUndo = false;
+  public canRedo = false;
+
+  public weDebuggingOrNah = true;
 
   timeRemainingId!: NodeJS.Timeout | null;
 
   //configurable settings
   public timeRemaining = 2700000; //2700000 = 45min
-  maxInnings = 5;
+  //starts
   startingBallCount = 0;
   startingStrikeCount = 0;
   startingFoulCount = 0;
+  startingOutCount = 0;
+  //maxes
+  maxInnings = 5;
+  maxBallCount = 4;
+  maxStrikeCount = 3;
+  maxFoulCount = 4;
+  maxOutCount = 3;
 
   settingsService = inject(SettingsService);
   editsService = inject(EditsTrackerService);
 
   constructor() {
+    // const settings = this.settingsService.getSettings();
+    // this.settingsService.saveSettings(settings);
     this.maxInnings = this.settingsService.getInnings();
     this.timeRemaining = this.settingsService.getTimeRemaining();
     this.startingBallCount = this.settingsService.getStartingBallCount();
     this.startingStrikeCount = this.settingsService.getStartingStrikeCount();
     this.startingFoulCount = this.settingsService.getStartingFoulCount();
+    this.canRedo = this.editsService.canUserUndo();
+    this.canUndo = this.editsService.canUserRedo();
 
     this.resetBallCount();
+    this.editsService.pushAction('out', this.currentNumberOfOuts, true);
   }
 
   toggleTimeRemaining() {
@@ -65,38 +82,51 @@ export class GameTrackerComponent {
 
   onTickerClick(data: TickerClickData) {
     let countType = data.countType;
+    let isBulkAction = false;
     switch (countType) {
       case "ball":
-        if (this.currentBallsCount >= 3) {
+        if (this.currentBallsCount === this.startingBallCount) {
+          this.editsService.pushAction('ball', this.currentBallsCount, true);
+        }
+        this.currentBallsCount++;
+        isBulkAction = this.currentBallsCount >= this.maxBallCount;
+        this.editsService.pushAction('ball', this.currentBallsCount, isBulkAction);
+
+        if (isBulkAction) {
           this.resetBallCount();
-        } else {
-          this.currentBallsCount += 1;
-          this.editsService.pushAction('ball', 1);
+          this.editsService.pushAction('ball', this.startingBallCount, false);
         }
         break;
       case "strike":
-        if (this.currentStrikesCount >= 2) {
+        if (this.currentStrikesCount === this.startingStrikeCount) {
+          this.editsService.pushAction('strike', this.currentStrikesCount, true);
+        }
+        this.currentStrikesCount++;
+        isBulkAction = this.currentStrikesCount >= this.maxStrikeCount;
+        this.editsService.pushAction('strike', this.currentStrikesCount, isBulkAction);
+
+        if (isBulkAction) {
           this.resetBallCount();
-          this.editsService.pushAction('strike', 1);
-          if (this.currentNumberOfOuts < 2) {
-            this.currentNumberOfOuts += 1;
-            this.editsService.pushAction('out', 1);
-          } else {
+          if (this.currentNumberOfOuts === 0) {
+            this.editsService.pushAction('out', 0, true);
+          }
+          this.currentNumberOfOuts++;
+          this.editsService.pushAction('out', this.currentNumberOfOuts, true);
+          if (this.currentNumberOfOuts >= this.maxOutCount) {
             this.goToNextInning();
           }
-        } else {
-          this.currentStrikesCount += 1;
-          this.editsService.pushAction('strike', 1);
+          this.editsService.pushAction('strike', this.startingStrikeCount, false);
+
         }
         break;
       case "foul":
-        if (this.currentFoulsCount >= 3) {
+        //TODO: Fix me next
+        if (this.currentFoulsCount >= this.maxFoulCount) {
+          this.editsService.pushAction('foul', this.currentFoulsCount, true);
           this.resetBallCount();
-          this.editsService.pushAction('foul', 1);
           if (this.currentNumberOfOuts < 2) {
             this.currentNumberOfOuts += 1;
-            this.editsService.pushAction('foul', 1);
-            this.editsService.pushAction('out', 1);
+            this.editsService.pushAction('out', 1, true);
           } else {
             this.goToNextInning();
           }
@@ -106,7 +136,8 @@ export class GameTrackerComponent {
         }
         break;
       case "out":
-        if (this.currentNumberOfOuts >= 2) {
+        if (this.currentNumberOfOuts >= this.maxOutCount) {
+          this.editsService.pushAction('out', this.currentNumberOfOuts, true);
           this.resetBallCount();
           this.goToNextInning();
         } else {
@@ -117,10 +148,11 @@ export class GameTrackerComponent {
   }
 
   goToNextInning() {
+    this.editsService.pushAction('inningPosition', this.inningPosition, true);
     this.inningPosition = this.inningPosition === 'bottom' ? 'top' : 'bottom';
     if (this.inningPosition === 'top' ) {
       this.currentInning++;
-      this.editsService.pushAction('inning', 1);
+      this.editsService.pushAction('inning', 1, true);
     }
     this.currentNumberOfOuts = 0;
   }
@@ -134,10 +166,23 @@ export class GameTrackerComponent {
     this.resetBallCount();
   }
 
-  resetBallCount() {
+  resetBallCount(pushAction = true) {
+    if (pushAction) {
+      this.editsService.pushAction('ball', this.currentBallsCount, true);
+      this.editsService.pushAction('strike', this.currentStrikesCount, true);
+      this.editsService.pushAction('foul', this.currentFoulsCount, true);
+    }
+
     this.currentBallsCount = this.startingBallCount;
     this.currentStrikesCount = this.startingStrikeCount;
-    this.currentFoulsCount = 0;
+    this.currentFoulsCount = this.startingFoulCount;
+
+    if (pushAction) {
+      // this.editsService.pushAction('resetBallCount', 1, true);
+      this.editsService.pushAction('ball', this.currentBallsCount, true);
+      this.editsService.pushAction('strike', this.currentStrikesCount, true);
+      this.editsService.pushAction('foul', this.currentFoulsCount, true);
+    }
   }
 
   offenseScored() {
@@ -152,34 +197,66 @@ export class GameTrackerComponent {
 
   handleEdits(editType: EditType) {
     const userAction = this.editsService.traverseActions(editType);
-    let incrementBy = 1;
+
     if (!userAction) {
       return;
     }
 
-    if (editType === 'undo') {
-      incrementBy = -1;
-    }
-
     switch (userAction.action) {
       case 'score':
+        const score = Number(userAction.value);
         if (this.inningPosition === 'top') {
-          this.awayTeamScore += incrementBy;
+          this.awayTeamScore = score;
         } else {
-          this.homeTeamScore += incrementBy;
+          this.homeTeamScore = score;
         }
         break;
       case 'ball':
-        this.currentBallsCount += userAction.value * incrementBy;
+        const ballCount = Number(userAction.value);
+        this.currentBallsCount = ballCount;
+        if (userAction.isBulkAction) {
+          this.handleEdits(editType);
+        }
         break;
       case 'strike':
-        this.currentStrikesCount += userAction.value * incrementBy;
+        const strikeCount = Number(userAction.value);
+        this.currentStrikesCount = strikeCount;
+        if (userAction.isBulkAction) {
+          this.handleEdits(editType);
+        }
         break;
       case 'foul':
-        this.currentFoulsCount += userAction.value * incrementBy;
+        const foulsCount = Number(userAction.value);
+        this.currentFoulsCount = foulsCount;
+        if (userAction.isBulkAction) {
+          this.handleEdits(editType);
+        }
         break;
       case 'out':
-        this.currentNumberOfOuts += userAction.value * incrementBy;
+        this.currentNumberOfOuts = Number(userAction.value);
+        if (userAction.isBulkAction) {
+          this.handleEdits(editType);
+        }
+        break;
+      case 'resetBallCount':
+        this.resetBallCount(false);
+        if (userAction.isBulkAction) {
+          this.handleEdits(editType);
+        }
+        break;
+      case 'inningPosition':
+        const inningPosition = userAction.value as InningPosition;
+        this.inningPosition = inningPosition;
+
+        if (userAction.isBulkAction) {
+          this.handleEdits(editType);
+        }
+        break;
+      case 'inning':
+        this.currentInning = Number(userAction.value);
+        if (userAction.isBulkAction) {
+          this.handleEdits(editType);
+        }
         break;
       default:
         break;

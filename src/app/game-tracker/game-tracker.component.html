@@ -38,12 +38,20 @@
 </div>
 
 <div class="edits">
-  <button mat-fab extended (click)="handleEdits('undo')">
+  <button mat-fab extended [disabled]="!editsService.canUserUndo()" (click)="handleEdits('undo')">
     <div>Undo</div>
     <div><mat-icon>undo</mat-icon></div>
   </button>
-  <button mat-fab extended (click)="handleEdits('redo')">
+  <button mat-fab extended [disabled]="!editsService.canUserRedo()" (click)="handleEdits('redo')">
     <div>Redo</div>
     <div><mat-icon>redo</mat-icon></div>
   </button>
 </div>
+
+@if (weDebuggingOrNah) {
+  <div class="debug-info">
+    <div *ngFor="let action of editsService.getActions(); let i= index;">
+      <div>{{editsService.getCurrentIndex() === i ? '->' : ''}} {{action.action}} - {{action.value}}</div>
+    </div>
+  </div>
+}

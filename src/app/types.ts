@@ -24,12 +24,12 @@ export interface RulesSettings {
     startingFoulCount: number,
 }
 
-export type InGameUserActionType = CountType | 'inning';
-// export type InGameUserActionType<T extends CountType> = T & 'inning';
+export type InGameUserActionType = CountType | 'inning' | 'inningPosition' | 'resetBallCount';
 
 export interface InGameUserAction {
     action: InGameUserActionType,
-    value: number,
+    value: number | string,
+    isBulkAction?: boolean,
 }
 
 export type EditType = 'undo' | 'redo';
