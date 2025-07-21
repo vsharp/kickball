@@ -3,12 +3,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { CountType, InningPosition, TeamFieldingType, TeamVisitationType } from '../types';
 
 @Component({
-  selector: 'app-score-ticker',
+  selector: 'app-ticker',
   imports: [MatIconModule],
-  templateUrl: './score-ticker.component.html',
-  styleUrl: './score-ticker.component.scss'
+  templateUrl: './ticker.component.html',
+  styleUrl: './ticker.component.scss'
 })
-export class ScoreTickerComponent implements OnChanges {
+export class TickerComponent implements OnChanges {
   @Input() score = 0;
   // score = input(0);
   currentTeamFieldingType: TeamFieldingType = 'defense';

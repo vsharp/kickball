@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { ScoreTickerComponent, TickerClickData } from '../score-ticker/score-ticker.component';
+import { TickerComponent, TickerClickData } from '../ticker/ticker.component';
 import { InningTickerComponent } from '../inning-ticker/inning-ticker.component';
 import { MatButtonModule } from '@angular/material/button';
 import { TimeRemainingPipe } from '../time-remaining.pipe';
+import { SettingsService } from "../settings.service";
 
 @Component({
   selector: 'app-game-tracker',
-  imports: [MatIconModule, ScoreTickerComponent, InningTickerComponent, MatButtonModule, TimeRemainingPipe],
+  imports: [MatIconModule, TickerComponent, InningTickerComponent, MatButtonModule, TimeRemainingPipe],
   templateUrl: './game-tracker.component.html',
   styleUrl: './game-tracker.component.scss'
 })
@@ -20,13 +21,27 @@ export class GameTrackerComponent {
   public currentStrikesCount = 0;
   public currentFoulsCount = 0;
   public currentNumberOfOuts = 0;
-  public timeRemaining = 2700000;
+  public timeRemaining = 2700000; //2700000 = 45min
 
   timeRemainingId!: NodeJS.Timeout;
   maxInnings = 5;
-  maxTimeLimit = 2700000; //2700000 = 45min
+  startingBallCount = 0;
+  startingStrikeCount = 0;
 
-  constructor() {}
+  settingsService = inject(SettingsService);
+
+  constructor() {
+    const settings = this.settingsService.getSettings();
+    this.maxInnings = this.settingsService.getInnings();
+    this.timeRemaining = this.settingsService.getTimeRemaining();
+    this.startingBallCount = this.settingsService.getStartingBallCount();
+    this.startingStrikeCount = this.settingsService.getStartingStrikeCount();
+
+    this.resetPitchCount();
+
+    // console.log('settings', settings);
+    // this.settingsService.saveSettings(settings);
+  }
 
   toggleTimeRemaining() {
     if (this.timeRemainingId) {
@@ -106,8 +121,8 @@ export class GameTrackerComponent {
   }
 
   resetPitchCount() {
-    this.currentBallsCount = 0;
-    this.currentStrikesCount = 0;
+    this.currentBallsCount = this.startingBallCount;
+    this.currentStrikesCount = this.startingStrikeCount;
     this.currentFoulsCount = 0;
   }
 
