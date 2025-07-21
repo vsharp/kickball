@@ -42,13 +42,13 @@ export class TickerComponent implements OnChanges {
 
   getCountTypeLabel() {
     switch (this.countType) {
-      case 'strikes':
+      case 'strike':
         return 'Strikes';
-      case 'balls':
+      case 'ball':
         return 'Balls';
-      case 'fouls':
+      case 'foul':
         return 'Fouls';
-      case 'outs':
+      case 'out':
         return 'Outs';
       default:
         return '';

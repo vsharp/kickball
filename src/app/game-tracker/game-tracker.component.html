@@ -2,21 +2,21 @@
 <div class="score-inning">
 
   <div class="scores">
-    <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="inningPosition" countType="scores" (tickerClicked)="onScoreClick($event)" />
-    <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="inningPosition" countType="scores" (tickerClicked)="onScoreClick($event)" />
+    <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="currentInningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
+    <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="currentInningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
   </div>
 
   <div class="inning">
-    <app-inning-ticker [inningPosition]="inningPosition" [currentInning]="currentInning" />
+    <app-inning-ticker [inningPosition]="currentInningPosition" [currentInning]="currentInning" />
   </div>
 
 </div>
 
 <div class="pitch-count">
-  <app-ticker [score]="currentBallsCount" countType="balls" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker [score]="currentStrikesCount" countType="strikes" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker [score]="currentFoulsCount"  countType="fouls" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker class="outs" [score]="currentNumberOfOuts" countType="outs" (tickerClicked)="onTickerClick($event)" />
+  <app-ticker [score]="currentBallsCount" countType="ball" (tickerClicked)="onTickerClick($event)" />
+  <app-ticker [score]="currentStrikesCount" countType="strike" (tickerClicked)="onTickerClick($event)" />
+  <app-ticker [score]="currentFoulsCount"  countType="foul" (tickerClicked)="onTickerClick($event)" />
+  <app-ticker class="out" [score]="currentNumberOfOuts" countType="out" (tickerClicked)="onTickerClick($event)" />
 </div>
 
 <div class="runner-scored">
@@ -29,16 +29,29 @@
 
 <div class="game-clock">
     <div>Game Clock</div>
-    <button mat-flat-button class="time-remaining" (click)="toggleTimeRemaining()">{{timeRemaining | timeRemaining}}</button>
+    <button mat-flat-button (click)="toggleTimeRemaining()">
+      <div class="time-remaining">
+        <div><mat-icon>{{timeRemainingId ? 'pause' : 'play_arrow'}}</mat-icon></div>
+        <div>{{timeRemaining | timeRemaining}}</div>
+        </div>
+    </button>
 </div>
 
 <div class="edits">
-  <button mat-fab extended >
+  <button mat-fab extended [disabled]="!editsService.canUserUndo()" (click)="handleEdits('undo')">
     <div>Undo</div>
     <div><mat-icon>undo</mat-icon></div>
   </button>
-  <button mat-fab extended >
+  <button mat-fab extended [disabled]="!editsService.canUserRedo()" (click)="handleEdits('redo')">
     <div>Redo</div>
     <div><mat-icon>redo</mat-icon></div>
   </button>
 </div>
+
+@if (weDebuggingOrNah) {
+  <div class="debug-info">
+    <div *ngFor="let action of editsService.getActions(); let i= index;">
+      <div>{{editsService.getCurrentIndex() === i ? '->' : ''}} {{i}}: {{action.action}} - {{action.value}} - {{action.isBulkAction}}</div>
+    </div>
+  </div>
+}
