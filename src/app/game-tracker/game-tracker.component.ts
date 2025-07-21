@@ -18,7 +18,7 @@ import { NgForOf } from '@angular/common';
 export class GameTrackerComponent {
   public awayTeamScore = 0;
   public homeTeamScore = 0;
-  public inningPosition: 'top' | 'bottom' = 'top';
+  public currentInningPosition: 'top' | 'bottom' = 'top';
   public currentInning = 1;
   public currentBallsCount = 0;
   public currentStrikesCount = 0;
@@ -106,53 +106,64 @@ export class GameTrackerComponent {
         this.editsService.pushAction('strike', this.currentStrikesCount, isBulkAction);
 
         if (isBulkAction) {
-          this.resetBallCount();
-          if (this.currentNumberOfOuts === 0) {
-            this.editsService.pushAction('out', 0, true);
-          }
+          this.editsService.pushAction('out', this.currentNumberOfOuts, true);
           this.currentNumberOfOuts++;
           this.editsService.pushAction('out', this.currentNumberOfOuts, true);
+
+          this.resetBallCount();
+
           if (this.currentNumberOfOuts >= this.maxOutCount) {
             this.goToNextInning();
           }
           this.editsService.pushAction('strike', this.startingStrikeCount, false);
-
         }
         break;
       case "foul":
-        //TODO: Fix me next
-        if (this.currentFoulsCount >= this.maxFoulCount) {
+        if (this.currentFoulsCount === this.startingFoulCount) {
           this.editsService.pushAction('foul', this.currentFoulsCount, true);
+        }
+        this.currentFoulsCount++;
+        isBulkAction = this.currentFoulsCount >= this.maxFoulCount;
+        this.editsService.pushAction('foul', this.currentFoulsCount, isBulkAction);
+
+        if (isBulkAction) {
+          this.editsService.pushAction('out', this.currentNumberOfOuts, true);
+          this.currentNumberOfOuts++;
+          this.editsService.pushAction('out', this.currentNumberOfOuts, true);
+
           this.resetBallCount();
-          if (this.currentNumberOfOuts < 2) {
-            this.currentNumberOfOuts += 1;
-            this.editsService.pushAction('out', 1, true);
-          } else {
+
+          if (this.currentNumberOfOuts >= this.maxOutCount) {
             this.goToNextInning();
           }
-        } else {
-          this.currentFoulsCount += 1;
-          this.editsService.pushAction('foul', 1);
+          this.editsService.pushAction('foul', this.startingFoulCount, false);
         }
         break;
       case "out":
-        if (this.currentNumberOfOuts >= this.maxOutCount) {
+        if (this.currentNumberOfOuts === this.startingOutCount) {
           this.editsService.pushAction('out', this.currentNumberOfOuts, true);
-          this.resetBallCount();
+        }
+        this.currentNumberOfOuts++;
+        isBulkAction = this.currentNumberOfOuts >= this.maxOutCount;
+        this.editsService.pushAction('out', this.currentNumberOfOuts, isBulkAction);
+        this.resetBallCount();
+
+        if (isBulkAction) {
+          this.editsService.pushAction('out', this.currentNumberOfOuts, true);
           this.goToNextInning();
-        } else {
-          this.currentNumberOfOuts += 1;
-          this.editsService.pushAction('out', 1);
+          this.editsService.pushAction('out', this.startingOutCount, false);
         }
     }
   }
 
   goToNextInning() {
-    this.editsService.pushAction('inningPosition', this.inningPosition, true);
-    this.inningPosition = this.inningPosition === 'bottom' ? 'top' : 'bottom';
-    if (this.inningPosition === 'top' ) {
+    this.editsService.pushAction('inningPosition', this.currentInningPosition, true);
+    this.currentInningPosition = this.currentInningPosition === 'bottom' ? 'top' : 'bottom';
+    this.editsService.pushAction('inningPosition', this.currentInningPosition, true);
+    if (this.currentInningPosition === 'top' ) {
+      this.editsService.pushAction('inning', this.currentInning, true);
       this.currentInning++;
-      this.editsService.pushAction('inning', 1, true);
+      this.editsService.pushAction('inning', this.currentInning, true);
     }
     this.currentNumberOfOuts = 0;
   }
@@ -167,6 +178,8 @@ export class GameTrackerComponent {
   }
 
   resetBallCount(pushAction = true) {
+    //save the previous state before resetting
+    //we need to have the state right before an out happened
     if (pushAction) {
       this.editsService.pushAction('ball', this.currentBallsCount, true);
       this.editsService.pushAction('strike', this.currentStrikesCount, true);
@@ -186,13 +199,15 @@ export class GameTrackerComponent {
   }
 
   offenseScored() {
-    if (this.inningPosition === 'top') {
-      this.awayTeamScore += 1;
+    if (this.currentInningPosition === 'top') {
+      this.editsService.pushAction('awayTeamScore', this.awayTeamScore, true);
+      this.awayTeamScore++;
+      this.editsService.pushAction('awayTeamScore', this.awayTeamScore, false);
     } else {
-      this.homeTeamScore += 1;
+      this.editsService.pushAction('homeTeamScore', this.homeTeamScore, true);
+      this.homeTeamScore++;
+      this.editsService.pushAction('homeTeamScore', this.homeTeamScore, false);
     }
-    this.editsService.pushAction('score', 1);
-    // this.editsService.pushAction(CountTypes.strike, 1);
   }
 
   handleEdits(editType: EditType) {
@@ -204,11 +219,17 @@ export class GameTrackerComponent {
 
     switch (userAction.action) {
       case 'score':
+      case 'awayTeamScore':
+      case 'homeTeamScore':
         const score = Number(userAction.value);
-        if (this.inningPosition === 'top') {
+        if (this.currentInningPosition === 'top') {
           this.awayTeamScore = score;
         } else {
           this.homeTeamScore = score;
+        }
+
+        if (userAction.isBulkAction) {
+          this.handleEdits(editType);
         }
         break;
       case 'ball':
@@ -246,7 +267,7 @@ export class GameTrackerComponent {
         break;
       case 'inningPosition':
         const inningPosition = userAction.value as InningPosition;
-        this.inningPosition = inningPosition;
+        this.currentInningPosition = inningPosition;
 
         if (userAction.isBulkAction) {
           this.handleEdits(editType);

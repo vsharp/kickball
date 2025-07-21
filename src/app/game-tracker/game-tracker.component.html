@@ -2,12 +2,12 @@
 <div class="score-inning">
 
   <div class="scores">
-    <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="inningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
-    <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="inningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
+    <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="currentInningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
+    <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="currentInningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
   </div>
 
   <div class="inning">
-    <app-inning-ticker [inningPosition]="inningPosition" [currentInning]="currentInning" />
+    <app-inning-ticker [inningPosition]="currentInningPosition" [currentInning]="currentInning" />
   </div>
 
 </div>
@@ -51,7 +51,7 @@
 @if (weDebuggingOrNah) {
   <div class="debug-info">
     <div *ngFor="let action of editsService.getActions(); let i= index;">
-      <div>{{editsService.getCurrentIndex() === i ? '->' : ''}} {{action.action}} - {{action.value}}</div>
+      <div>{{editsService.getCurrentIndex() === i ? '->' : ''}} {{i}}: {{action.action}} - {{action.value}} - {{action.isBulkAction}}</div>
     </div>
   </div>
 }
