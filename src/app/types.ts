@@ -22,6 +22,7 @@ export interface RulesSettings {
     startingBallCount: number,
     startingStrikeCount: number,
     startingFoulCount: number,
+    startingOutCount: number,
 }
 
 export type InGameUserActionType = CountType | 'inning' | 'inningPosition' | 'resetBallCount' | 'awayTeamScore' | 'homeTeamScore';
