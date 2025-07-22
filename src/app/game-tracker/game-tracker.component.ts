@@ -27,7 +27,7 @@ export class GameTrackerComponent {
   public canUndo = false;
   public canRedo = false;
 
-  public weDebuggingOrNah = true;
+  public weDebuggingOrNah = false;
 
   timeRemainingId!: NodeJS.Timeout | null;
 
@@ -49,8 +49,6 @@ export class GameTrackerComponent {
   editsService = inject(EditsTrackerService);
 
   constructor() {
-    // const settings = this.settingsService.getSettings();
-    // this.settingsService.saveSettings(settings);
     this.maxInnings = this.settingsService.getInnings();
     this.timeRemaining = this.settingsService.getTimeRemaining();
     this.startingBallCount = this.settingsService.getStartingBallCount();
