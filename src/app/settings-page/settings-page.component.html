@@ -1,49 +1,49 @@
 <div class="settings">
 
-  <mat-accordion>
-    <mat-expansion-panel expanded="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>Starting Counts</mat-panel-title>
-      </mat-expansion-panel-header>
+  <ion-accordion-group value="starting-count">
 
-  <form [formGroup]="settingsForm" (ngSubmit)="onSave()" class="game-settings">
+    <ion-accordion value="starting-count">
+      <ion-item slot="header" color="light">
+        <ion-label>Starting Counts</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
 
-    <mat-form-field>
-      <mat-label>Starting Strike Count</mat-label>
-      <input matInput type="number" formControlName="startingStrikeCount">
-    </mat-form-field>
+        <form [formGroup]="settingsForm" (ngSubmit)="onSave()" class="game-settings">
 
-    <mat-form-field>
-      <mat-label>Starting Ball Count</mat-label>
-      <input matInput type="number" formControlName="startingBallCount">
-    </mat-form-field>
+          <ion-list>
+            <ion-item>
+              <ion-input label="Starting Strike Count" type="number" formControlName="startingStrikeCount" />
+            </ion-item>
 
-    <mat-form-field>
-      <mat-label>Starting Foul Count</mat-label>
-      <input matInput type="number" formControlName="startingFoulCount">
-    </mat-form-field>
+            <ion-item>
+              <ion-input label="Starting Ball Count" type="number" formControlName="startingBallCount" />
+            </ion-item>
 
-    <mat-form-field>
-      <mat-label>Starting Out Count</mat-label>
-      <input matInput type="number" formControlName="startingOutCount">
-    </mat-form-field>
+            <ion-item>
+              <ion-input label="Starting Strike Count" type="number" formControlName="startingFoulCount" />
+            </ion-item>
 
-    <mat-form-field>
-      <mat-label>Innings</mat-label>
-      <input matInput type="number" formControlName="numberOfInnings">
-    </mat-form-field>
+            <ion-item>
+              <ion-input label="Starting Out Count" type="number" formControlName="startingOutCount" />
+            </ion-item>
 
-    <mat-form-field>
-      <mat-label>Game Duration(minutes)</mat-label>
-      <input matInput type="number" formControlName="gameDuration">
-    </mat-form-field>
+            <ion-item>
+              <ion-input label="Innings" type="number" formControlName="numberOfInnings" />
+            </ion-item>
 
-    <div>
-      <button mat-flat-button type="submit">Save</button>
-      <a mat-stroked-button href="/game-tracker">Game</a>
-    </div>
-  </form>
-    </mat-expansion-panel>
-  </mat-accordion>
+            <ion-item>
+              <ion-input label="Game Duration(minutes)" type="number" formControlName="gameDuration" />
+            </ion-item>
+
+            <div>
+              <ion-button type="submit">Save</ion-button>
+            </div>
+
+          </ion-list>
+        </form>
+      </div>
+    </ion-accordion>
+
+  </ion-accordion-group>
 
 </div>

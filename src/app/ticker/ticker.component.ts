@@ -1,10 +1,12 @@
 import { Component, Input, input, InputSignal, OnChanges, Output, SimpleChanges, EventEmitter } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { CountType, InningPosition, TeamFieldingType, TeamVisitationType } from '../types';
+import { IonButton, IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { caretDownOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-ticker',
-  imports: [MatIconModule],
+  imports: [IonButton, IonIcon],
   templateUrl: './ticker.component.html',
   styleUrl: './ticker.component.scss'
 })
@@ -23,6 +25,7 @@ export class TickerComponent implements OnChanges {
   @Output() tickerClicked = new EventEmitter();
 
   constructor() {
+    addIcons({ caretDownOutline });
   }
 
   ngOnChanges(changes: SimpleChanges) {
