@@ -3,41 +3,43 @@
   <ion-accordion-group value="starting-count">
 
     <ion-accordion value="starting-count">
+
       <ion-item slot="header" color="light">
         <ion-label>Starting Counts</ion-label>
       </ion-item>
+
       <div class="ion-padding" slot="content">
 
         <form [formGroup]="settingsForm" (ngSubmit)="onSave()" class="game-settings">
 
           <ion-list>
             <ion-item>
-              <ion-input label="Starting Strike Count" type="number" formControlName="startingStrikeCount" />
+              <ion-input label="Starting Strike Count" labelPlacement="stacked" type="number" formControlName="startingStrikeCount" />
             </ion-item>
 
             <ion-item>
-              <ion-input label="Starting Ball Count" type="number" formControlName="startingBallCount" />
+              <ion-input label="Starting Ball Count" labelPlacement="stacked" type="number" formControlName="startingBallCount" />
             </ion-item>
 
             <ion-item>
-              <ion-input label="Starting Strike Count" type="number" formControlName="startingFoulCount" />
+              <ion-input label="Starting Strike Count" labelPlacement="stacked" type="number" formControlName="startingFoulCount" />
             </ion-item>
 
             <ion-item>
-              <ion-input label="Starting Out Count" type="number" formControlName="startingOutCount" />
+              <ion-input label="Starting Out Count" labelPlacement="stacked" type="number" formControlName="startingOutCount" />
             </ion-item>
 
             <ion-item>
-              <ion-input label="Innings" type="number" formControlName="numberOfInnings" />
+              <ion-input label="Innings" type="number" labelPlacement="stacked" formControlName="numberOfInnings" />
             </ion-item>
 
             <ion-item>
-              <ion-input label="Game Duration(minutes)" type="number" formControlName="gameDuration" />
+              <ion-input label="Game Duration(minutes)" labelPlacement="stacked" type="number" formControlName="gameDuration" />
             </ion-item>
 
-            <div>
+            <ion-item class="">
               <ion-button type="submit">Save</ion-button>
-            </div>
+            </ion-item>
 
           </ion-list>
         </form>
