@@ -1,17 +1,18 @@
 import { Component, inject } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { TickerComponent, TickerClickData } from '../ticker/ticker.component';
 import { InningTickerComponent } from '../inning-ticker/inning-ticker.component';
-import { MatButtonModule } from '@angular/material/button';
 import { TimeRemainingPipe } from '../pipes/time-remaining.pipe';
 import { SettingsService } from "../services/settings.service";
 import { EditsTrackerService } from "../services/edits-tracker.service";
 import { CountTypes, EditType, InGameUserAction, InGameUserActionType, InningPosition } from "../types";
 import { NgForOf } from '@angular/common';
+import { IonButton, IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp } from 'ionicons/icons';
 
 @Component({
   selector: 'app-game-tracker',
-  imports: [MatIconModule, TickerComponent, InningTickerComponent, MatButtonModule, TimeRemainingPipe, NgForOf],
+  imports: [TickerComponent, InningTickerComponent, TimeRemainingPipe, NgForOf, IonButton, IonIcon],
   templateUrl: './game-tracker.component.html',
   styleUrl: './game-tracker.component.scss'
 })
@@ -59,6 +60,8 @@ export class GameTrackerComponent {
 
     this.resetBallCount();
     this.editsService.pushAction('out', this.currentNumberOfOuts, true);
+
+    addIcons({ arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp });
   }
 
   toggleTimeRemaining() {

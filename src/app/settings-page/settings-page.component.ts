@@ -1,29 +1,27 @@
 import { Component, inject } from '@angular/core';
-import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatAnchor, MatButton } from '@angular/material/button';
 import { SettingsService } from '../services/settings.service';
 import { RulesSettings } from '../types';
 import {
-  MatAccordion,
-  MatExpansionPanel, MatExpansionPanelDescription,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle
-} from '@angular/material/expansion';
+  AlertController,
+  IonAccordion,
+  IonAccordionGroup,
+  IonButton, IonInput,
+  IonItem,
+  IonLabel, IonList
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-settings-page',
   imports: [
-    MatFormField,
-    MatLabel,
-    MatInput,
     ReactiveFormsModule,
-    MatButton,
-    MatAnchor,
-    MatAccordion,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
+    IonAccordion,
+    IonAccordionGroup,
+    IonItem,
+    IonLabel,
+    IonButton,
+    IonInput,
+    IonList,
   ],
   templateUrl: './settings-page.component.html',
   styleUrl: './settings-page.component.scss'
@@ -34,6 +32,7 @@ export class SettingsPageComponent {
   currentSettings!: RulesSettings;
 
   settingsService = inject(SettingsService);
+  alertController = inject(AlertController);
 
   constructor() {
     this.currentSettings = this.settingsService.getSettings();
@@ -50,7 +49,7 @@ export class SettingsPageComponent {
 
   }
 
-  onSave() {
+  async onSave() {
     const submittedSettings = this.settingsForm.value;
     const settingsToSave: RulesSettings =  {
       startingStrikeCount: submittedSettings.startingStrikeCount,
@@ -63,6 +62,12 @@ export class SettingsPageComponent {
 
     this.settingsService.saveSettings(settingsToSave);
 
-    alert('Settings Saved');
+    const alert = await this.alertController.create({
+      header: 'Settings Saved',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+
   }
 }

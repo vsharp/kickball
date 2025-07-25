@@ -1,8 +1,9 @@
-<button class="score-ticker count-type-{{countType}}" (click)="onTickerClick($event)">
+<ion-button (click)="onTickerClick($event)">
 
+  <div class="score-ticker count-type-{{countType}}">
   @if (currentTeamFieldingType === 'offense') {
     <div class="team-on-offense">
-      <mat-icon fontIcon="arrow_drop_down" />
+      <ion-icon name="caret-down-outline" />
     </div>
   }
 
@@ -13,5 +14,5 @@
   }
 
   <div class="score">{{score}}</div>
-
-</button>
+  </div>
+</ion-button>

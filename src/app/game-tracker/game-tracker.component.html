@@ -1,59 +1,68 @@
+<div class="game-tracker">
+  <div class="score-inning">
 
-<div class="score-inning">
-
-  <div class="scores">
-    <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="currentInningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
-    <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="currentInningPosition" countType="score" (tickerClicked)="onScoreClick($event)" />
-  </div>
-
-  <div class="inning">
-    <app-inning-ticker [inningPosition]="currentInningPosition" [currentInning]="currentInning" />
-  </div>
-
-</div>
-
-<div class="pitch-count">
-  <app-ticker [score]="currentBallsCount" countType="ball" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker [score]="currentStrikesCount" countType="strike" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker [score]="currentFoulsCount"  countType="foul" (tickerClicked)="onTickerClick($event)" />
-  <app-ticker class="out" [score]="currentNumberOfOuts" countType="out" (tickerClicked)="onTickerClick($event)" />
-</div>
-
-<div class="runner-scored">
-  <button mat-flat-button (click)="onRunnerScored()">Runner Scored</button>
-</div>
-
-<div class="kicker-is-safe">
-  <button mat-flat-button (click)="onKickerSafe()">Kicker is safe!</button>
-</div>
-
-<div class="game-clock">
-    <div>Game Clock</div>
-    <button mat-flat-button (click)="toggleTimeRemaining()">
-      <div class="time-remaining">
-        <div><mat-icon>{{timeRemainingId ? 'pause' : 'play_arrow'}}</mat-icon></div>
-        <div>{{timeRemaining | timeRemaining}}</div>
-        </div>
-    </button>
-</div>
-
-<div class="edits">
-  <button mat-fab extended [disabled]="!editsService.canUserUndo()" (click)="handleEdits('undo')">
-    <div>Undo</div>
-    <div><mat-icon>undo</mat-icon></div>
-  </button>
-  <button mat-fab extended [disabled]="!editsService.canUserRedo()" (click)="handleEdits('redo')">
-    <div>Redo</div>
-    <div><mat-icon>redo</mat-icon></div>
-  </button>
-</div>
-
-@if (weDebuggingOrNah) {
-  <div class="debug-info">
-    <div *ngFor="let action of editsService.getActions(); let i= index;">
-      <div>{{editsService.getCurrentIndex() === i ? '->' : ''}} {{i}}: {{action.action}} - {{action.value}} - {{action.isBulkAction}}</div>
+    <div class="scores">
+      <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="currentInningPosition"
+                  countType="score" (tickerClicked)="onScoreClick($event)"/>
+      <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="currentInningPosition"
+                  countType="score" (tickerClicked)="onScoreClick($event)"/>
     </div>
-  </div>
-}
 
-<a mat-button href="/settings">Settings</a>
+    <div class="inning">
+      <app-inning-ticker [inningPosition]="currentInningPosition" [currentInning]="currentInning"/>
+    </div>
+
+  </div>
+
+  <div class="pitch-count">
+    <app-ticker [score]="currentBallsCount" countType="ball" (tickerClicked)="onTickerClick($event)"/>
+    <app-ticker [score]="currentStrikesCount" countType="strike" (tickerClicked)="onTickerClick($event)"/>
+    <app-ticker [score]="currentFoulsCount" countType="foul" (tickerClicked)="onTickerClick($event)"/>
+    <app-ticker class="out" [score]="currentNumberOfOuts" countType="out" (tickerClicked)="onTickerClick($event)"/>
+  </div>
+
+  <div class="runner-scored">
+    <ion-button (click)="onRunnerScored()">Runner Scored</ion-button>
+  </div>
+
+  <div class="kicker-is-safe">
+    <ion-button (click)="onKickerSafe()">Kicker is safe!</ion-button>
+  </div>
+
+  <div class="game-clock">
+    <div>Game Clock</div>
+    <ion-button (click)="toggleTimeRemaining()">
+      <div class="time-remaining">
+        <div>
+          <ion-icon name="{{ timeRemainingId ? 'pause-sharp' : 'play-sharp' }}"></ion-icon>
+        </div>
+        <div>{{ timeRemaining | timeRemaining }}</div>
+      </div>
+    </ion-button>
+  </div>
+
+  <div class="edits">
+    <ion-button [disabled]="!editsService.canUserUndo()" (click)="handleEdits('undo')">
+      <div>Undo</div>
+      <div>
+        <ion-icon name="arrow-undo-sharp"></ion-icon>
+      </div>
+    </ion-button>
+    <ion-button [disabled]="!editsService.canUserRedo()" (click)="handleEdits('redo')">
+      <div>Redo</div>
+      <div>
+        <ion-icon name="arrow-redo-sharp"></ion-icon>
+      </div>
+    </ion-button>
+  </div>
+
+  @if (weDebuggingOrNah) {
+    <div class="debug-info">
+      <div *ngFor="let action of editsService.getActions(); let i= index;">
+        <div>{{ editsService.getCurrentIndex() === i ? '->' : '' }} {{ i }}: {{ action.action }} - {{ action.value }}
+          - {{ action.isBulkAction }}
+        </div>
+      </div>
+    </div>
+  }
+</div>

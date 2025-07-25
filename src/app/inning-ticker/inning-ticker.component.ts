@@ -1,11 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { InningPosition } from '../types';
-import { MatIcon } from '@angular/material/icon';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { caretUpOutline, caretDownOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-inning-ticker',
   imports: [
-    MatIcon,
+    IonIcon,
   ],
   templateUrl: './inning-ticker.component.html',
   styleUrl: './inning-ticker.component.scss'
@@ -16,5 +18,8 @@ export class InningTickerComponent {
 
   @Input() currentInning  = 1;
 
+  constructor() {
+    addIcons({ caretUpOutline, caretDownOutline });
+  }
 
 }

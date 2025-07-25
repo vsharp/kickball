@@ -1,0 +1,10 @@
+{
+  "defaultProject": "kickball",
+  "projects": {
+    "kickball": {
+      "name": "Kickball Ump",
+      "integrations": {},
+      "type": "angular-standalone"
+    }
+  }
+}
