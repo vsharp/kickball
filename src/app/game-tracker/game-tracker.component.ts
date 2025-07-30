@@ -50,6 +50,7 @@ export class GameTrackerComponent {
   editsService = inject(EditsTrackerService);
 
   constructor() {
+    console.log('constructor GameTrackerComponent');
     this.maxInnings = this.settingsService.getInnings();
     this.timeRemaining = this.settingsService.getTimeRemaining();
     this.startingBallCount = this.settingsService.getStartingBallCount();
