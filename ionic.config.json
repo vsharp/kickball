@@ -3,7 +3,9 @@
   "projects": {
     "kickball": {
       "name": "Kickball Ump",
-      "integrations": {},
+      "integrations": {
+        "capacitor": {}
+      },
       "type": "angular-standalone"
     }
   }
