@@ -12,6 +12,11 @@ export class SettingsService {
   startingFoulCount = 1;
   startingOutCount = 0;
 
+  maxBallCount = 4;
+  maxStrikeCount = 3;
+  maxFoulCount = 4;
+  maxOutCount = 3;
+
   private storageKey = 'rules_settings';
 
   constructor() {
@@ -19,10 +24,16 @@ export class SettingsService {
 
     this.timeRemaining = mergedSettings.timeRemaining;
     this.innings = mergedSettings.innings;
+
     this.startingBallCount = mergedSettings.startingBallCount;
     this.startingStrikeCount = mergedSettings.startingStrikeCount;
     this.startingFoulCount = mergedSettings.startingFoulCount;
     this.startingOutCount = mergedSettings.startingOutCount;
+
+    this.maxBallCount = mergedSettings.maxBallCount;
+    this.maxStrikeCount = mergedSettings.maxStrikeCount;
+    this.maxFoulCount = mergedSettings.maxFoulCount;
+    this.maxOutCount = mergedSettings.maxOutCount;
   }
 
   getTimeRemaining() {
@@ -66,9 +77,32 @@ export class SettingsService {
   }
 
   saveSettings(settings: RulesSettings) {
-    const { timeRemaining, innings, startingBallCount, startingStrikeCount, startingFoulCount, startingOutCount } = this;
+    const {
+      timeRemaining,
+      innings,
+      startingBallCount,
+      startingStrikeCount,
+      startingFoulCount,
+      startingOutCount,
+      maxBallCount,
+      maxStrikeCount,
+      maxFoulCount,
+      maxOutCount
+    } = this;
+
     const mergedSettings =
-      Object.assign({ timeRemaining, innings, startingBallCount, startingStrikeCount, startingFoulCount, startingOutCount }, settings);
+      Object.assign({
+        timeRemaining,
+        innings,
+        startingBallCount,
+        startingStrikeCount,
+        startingFoulCount,
+        startingOutCount,
+        maxBallCount,
+        maxStrikeCount,
+        maxFoulCount,
+        maxOutCount
+      }, settings);
 
     localStorage.setItem(this.storageKey, JSON.stringify(mergedSettings));
   }

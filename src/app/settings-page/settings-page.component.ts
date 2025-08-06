@@ -43,6 +43,10 @@ export class SettingsPageComponent {
       startingBallCount: this.currentSettings.startingBallCount,
       startingFoulCount: this.currentSettings.startingFoulCount,
       startingOutCount: this.currentSettings.startingOutCount,
+      maxStrikeCount: this.currentSettings.maxStrikeCount,
+      maxBallCount: this.currentSettings.maxBallCount,
+      maxFoulCount: this.currentSettings.maxFoulCount,
+      maxOutCount: this.currentSettings.maxOutCount,
       numberOfInnings: this.currentSettings.innings,
       gameDuration: gameDuration.minutes,
     });
@@ -56,6 +60,10 @@ export class SettingsPageComponent {
       startingBallCount: submittedSettings.startingBallCount,
       startingFoulCount: submittedSettings.startingFoulCount,
       startingOutCount: submittedSettings.startingOutCount,
+      maxStrikeCount: submittedSettings.maxStrikeCount,
+      maxBallCount: submittedSettings.maxBallCount,
+      maxFoulCount: submittedSettings.maxFoulCount,
+      maxOutCount: submittedSettings.maxOutCount,
       innings: submittedSettings.numberOfInnings,
       timeRemaining: submittedSettings.gameDuration * 60000,
     }

@@ -1,50 +1,81 @@
 <div class="settings">
 
-  <ion-accordion-group value="starting-count">
+  <ion-accordion-group value="starting-count" multiple="true">
 
-    <ion-accordion value="starting-count">
+    <form [formGroup]="settingsForm" (ngSubmit)="onSave()" class="game-settings">
 
-      <ion-item slot="header" color="light">
-        <ion-label>Starting Counts</ion-label>
-      </ion-item>
+      <ion-accordion value="starting-count">
 
-      <div class="ion-padding" slot="content">
+        <ion-item slot="header" color="light">
+          <ion-label>Starting Counts</ion-label>
+        </ion-item>
 
-        <form [formGroup]="settingsForm" (ngSubmit)="onSave()" class="game-settings">
+        <div class="ion-padding" slot="content">
 
-          <ion-list>
-            <ion-item>
-              <ion-input label="Starting Strike Count" labelPlacement="stacked" type="number" formControlName="startingStrikeCount" />
-            </ion-item>
+            <ion-list>
+              <ion-item>
+                <ion-input label="Starting Strike Count" labelPlacement="stacked" type="number" formControlName="startingStrikeCount" />
+              </ion-item>
 
-            <ion-item>
-              <ion-input label="Starting Ball Count" labelPlacement="stacked" type="number" formControlName="startingBallCount" />
-            </ion-item>
+              <ion-item>
+                <ion-input label="Starting Ball Count" labelPlacement="stacked" type="number" formControlName="startingBallCount" />
+              </ion-item>
 
-            <ion-item>
-              <ion-input label="Starting Strike Count" labelPlacement="stacked" type="number" formControlName="startingFoulCount" />
-            </ion-item>
+              <ion-item>
+                <ion-input label="Starting Foul Count" labelPlacement="stacked" type="number" formControlName="startingFoulCount" />
+              </ion-item>
 
-            <ion-item>
-              <ion-input label="Starting Out Count" labelPlacement="stacked" type="number" formControlName="startingOutCount" />
-            </ion-item>
+              <ion-item>
+                <ion-input label="Starting Out Count" labelPlacement="stacked" type="number" formControlName="startingOutCount" />
+              </ion-item>
 
-            <ion-item>
-              <ion-input label="Innings" type="number" labelPlacement="stacked" formControlName="numberOfInnings" />
-            </ion-item>
+            </ion-list>
 
-            <ion-item>
-              <ion-input label="Game Duration(minutes)" labelPlacement="stacked" type="number" formControlName="gameDuration" />
-            </ion-item>
+        </div>
+      </ion-accordion>
 
-            <ion-item class="">
-              <ion-button type="submit">Save</ion-button>
-            </ion-item>
+      <ion-accordion value="max-count">
 
-          </ion-list>
-        </form>
-      </div>
-    </ion-accordion>
+          <ion-item slot="header" color="light">
+            <ion-label>Max Counts</ion-label>
+          </ion-item>
+
+          <div class="ion-padding" slot="content">
+
+            <ion-list>
+
+              <ion-item>
+                <ion-input label="Max Strike Count" labelPlacement="stacked" type="number" formControlName="maxStrikeCount" />
+              </ion-item>
+
+              <ion-item>
+                <ion-input label="Max Ball Count" labelPlacement="stacked" type="number" formControlName="maxBallCount" />
+              </ion-item>
+
+              <ion-item>
+                <ion-input label="Max Foul Count" labelPlacement="stacked" type="number" formControlName="maxFoulCount" />
+              </ion-item>
+
+              <ion-item>
+                <ion-input label="Max Out Count" labelPlacement="stacked" type="number" formControlName="maxOutCount" />
+              </ion-item>
+
+              <ion-item>
+                <ion-input label="Innings" type="number" labelPlacement="stacked" formControlName="numberOfInnings" />
+              </ion-item>
+
+              <ion-item>
+                <ion-input label="Game Duration(minutes)" labelPlacement="stacked" type="number" formControlName="gameDuration" />
+              </ion-item>
+
+            </ion-list>
+          </div>
+
+      </ion-accordion>
+
+      <ion-button type="submit">Save</ion-button>
+
+    </form>
 
   </ion-accordion-group>
 
