@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SettingsService } from '../services/settings.service';
 import { RulesSettings } from '../types';
 import {
   AlertController,
   IonAccordion,
   IonAccordionGroup,
-  IonButton, IonInput,
+  IonInput,
   IonItem,
   IonLabel, IonList
 } from '@ionic/angular/standalone';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings-page',
@@ -19,7 +20,6 @@ import {
     IonAccordionGroup,
     IonItem,
     IonLabel,
-    IonButton,
     IonInput,
     IonList,
   ],
@@ -30,12 +30,16 @@ export class SettingsPageComponent {
   settingsFormBuilder = new FormBuilder();
   settingsForm!: FormGroup;
   currentSettings!: RulesSettings;
+  settingsSavedClick!: Subscription;
+
 
   settingsService = inject(SettingsService);
   alertController = inject(AlertController);
 
   constructor() {
     this.currentSettings = this.settingsService.getSettings();
+    this.settingsSavedClick = this.settingsService.settingsSaved.subscribe(() => this.onSave());
+
     const gameDuration = this.settingsService.convertTime(this.currentSettings.timeRemaining)
 
     this.settingsForm = this.settingsFormBuilder.group({

@@ -1,5 +1,17 @@
-<main>
-  <section class="content">
-    <router-outlet></router-outlet>
-  </section>
-</main>
+<ion-app>
+
+  @if (toolBarActive) {
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button type="submit" (click)="onToolbarSave()">Save</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+  }
+
+  <ion-content>
+    <ion-router-outlet></ion-router-outlet>
+  </ion-content>
+
+</ion-app>

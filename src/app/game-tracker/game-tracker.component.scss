@@ -10,13 +10,18 @@
 
 .score-inning,
 .pitch-count,
-.scores {
+.scores,
+.game-clock {
   display: flex;
 }
 
-.time-remaining {
+.time-remaining, .game-clock  {
   display: flex;
   align-items: center;
+}
+
+.game-clock {
+  flex-direction: column;
 }
 
 .edits button {
@@ -29,8 +34,4 @@ app-ticker {
 
 .debug-info {
   margin-top: 20px;
-}
-
-.end-of-content {
-  margin-bottom: 30px;
 }

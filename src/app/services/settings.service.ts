@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RulesSettings } from '../types';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ import { RulesSettings } from '../types';
 export class SettingsService {
   timeRemaining: number = 2700000;
   innings = 5;
+
   startingBallCount = 1;
   startingStrikeCount = 0;
   startingFoulCount = 1;
@@ -16,6 +18,8 @@ export class SettingsService {
   maxStrikeCount = 3;
   maxFoulCount = 4;
   maxOutCount = 3;
+
+  settingsSaved: Subject<void> = new Subject<void>();
 
   private storageKey = 'rules_settings';
 
@@ -57,7 +61,19 @@ export class SettingsService {
   }
 
   getStartingOutCount() {
-      return this.startingOutCount;
+    return this.startingOutCount;
+  }
+
+  getMaxBallCount() {
+    return this.maxBallCount;
+  }
+
+  getMaxStrikeCount() {
+    return this.maxStrikeCount;
+  }
+
+  getMaxFoulCount() {
+    return this.maxFoulCount;
   }
 
   getSettings(): RulesSettings {
@@ -105,5 +121,9 @@ export class SettingsService {
       }, settings);
 
     localStorage.setItem(this.storageKey, JSON.stringify(mergedSettings));
+  }
+
+  saveButtonClicked() {
+    this.settingsSaved.next();
   }
 }
