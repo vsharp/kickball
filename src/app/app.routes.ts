@@ -4,14 +4,13 @@ import { SettingsPageComponent } from './settings-page/settings-page.component';
 import { AppNavComponent } from './app-nav/app-nav.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/game/game-tracker', pathMatch: 'full' },
+  { path: '', redirectTo: '/game-tracker', pathMatch: 'full' },
   {
-    path: 'game',
+    path: '',
     component: AppNavComponent,
     children: [
       { path: 'game-tracker', component: GameTrackerComponent },
       { path: 'settings', component: SettingsPageComponent },
-
     ],
   },
 ];

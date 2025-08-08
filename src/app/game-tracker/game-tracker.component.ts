@@ -12,7 +12,7 @@ import { arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp } from 'ionicons/
 
 @Component({
   selector: 'app-game-tracker',
-  imports: [TickerComponent, InningTickerComponent, TimeRemainingPipe, NgForOf, IonButton, IonIcon],
+  imports: [TickerComponent, InningTickerComponent, TimeRemainingPipe, IonButton, IonIcon],
   templateUrl: './game-tracker.component.html',
   styleUrl: './game-tracker.component.scss'
 })
@@ -27,6 +27,7 @@ export class GameTrackerComponent {
   public currentNumberOfOuts = 0;
   public canUndo = false;
   public canRedo = false;
+  public gameInProgress = false;
 
   public weDebuggingOrNah = false;
 
@@ -50,12 +51,17 @@ export class GameTrackerComponent {
   editsService = inject(EditsTrackerService);
 
   constructor() {
-    console.log('constructor GameTrackerComponent');
     this.maxInnings = this.settingsService.getInnings();
     this.timeRemaining = this.settingsService.getTimeRemaining();
+
     this.startingBallCount = this.settingsService.getStartingBallCount();
     this.startingStrikeCount = this.settingsService.getStartingStrikeCount();
     this.startingFoulCount = this.settingsService.getStartingFoulCount();
+
+    this.maxBallCount = this.settingsService.getMaxBallCount();
+    this.maxStrikeCount = this.settingsService.getMaxStrikeCount();
+    this.maxFoulCount = this.settingsService.getMaxFoulCount();
+
     this.canRedo = this.editsService.canUserUndo();
     this.canUndo = this.editsService.canUserRedo();
 
@@ -69,10 +75,12 @@ export class GameTrackerComponent {
     if (this.timeRemainingId) {
       clearInterval(this.timeRemainingId);
       this.timeRemainingId = null;
+      this.gameInProgress = false;
     } else {
       this.timeRemainingId = setInterval(() => {
         this.timeRemaining -= 1000;
       }, 1000);
+      this.gameInProgress = true;
     }
   }
 

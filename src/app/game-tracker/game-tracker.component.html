@@ -31,7 +31,7 @@
 
   <div class="game-clock">
     <div>Game Clock</div>
-    <ion-button (click)="toggleTimeRemaining()">
+    <ion-button (click)="toggleTimeRemaining()" size="large">
       <div class="time-remaining">
         <div>
           <ion-icon name="{{ timeRemainingId ? 'pause-sharp' : 'play-sharp' }}"></ion-icon>
@@ -58,11 +58,13 @@
 
   @if (weDebuggingOrNah) {
     <div class="debug-info">
-      <div *ngFor="let action of editsService.getActions(); let i= index;">
+      @for (action of editsService.getActions(); let i = $index; track $index;) {
         <div>{{ editsService.getCurrentIndex() === i ? '->' : '' }} {{ i }}: {{ action.action }} - {{ action.value }}
           - {{ action.isBulkAction }}
         </div>
-      </div>
+      }
     </div>
   }
+
+  <div class="end-of-content"></div>
 </div>

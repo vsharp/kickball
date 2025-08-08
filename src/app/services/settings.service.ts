@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RulesSettings } from '../types';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,10 +8,18 @@ import { RulesSettings } from '../types';
 export class SettingsService {
   timeRemaining: number = 2700000;
   innings = 5;
+
   startingBallCount = 1;
   startingStrikeCount = 0;
   startingFoulCount = 1;
   startingOutCount = 0;
+
+  maxBallCount = 4;
+  maxStrikeCount = 3;
+  maxFoulCount = 4;
+  maxOutCount = 3;
+
+  settingsSaved: Subject<void> = new Subject<void>();
 
   private storageKey = 'rules_settings';
 
@@ -19,10 +28,16 @@ export class SettingsService {
 
     this.timeRemaining = mergedSettings.timeRemaining;
     this.innings = mergedSettings.innings;
+
     this.startingBallCount = mergedSettings.startingBallCount;
     this.startingStrikeCount = mergedSettings.startingStrikeCount;
     this.startingFoulCount = mergedSettings.startingFoulCount;
     this.startingOutCount = mergedSettings.startingOutCount;
+
+    this.maxBallCount = mergedSettings.maxBallCount;
+    this.maxStrikeCount = mergedSettings.maxStrikeCount;
+    this.maxFoulCount = mergedSettings.maxFoulCount;
+    this.maxOutCount = mergedSettings.maxOutCount;
   }
 
   getTimeRemaining() {
@@ -46,7 +61,19 @@ export class SettingsService {
   }
 
   getStartingOutCount() {
-      return this.startingOutCount;
+    return this.startingOutCount;
+  }
+
+  getMaxBallCount() {
+    return this.maxBallCount;
+  }
+
+  getMaxStrikeCount() {
+    return this.maxStrikeCount;
+  }
+
+  getMaxFoulCount() {
+    return this.maxFoulCount;
   }
 
   getSettings(): RulesSettings {
@@ -66,10 +93,37 @@ export class SettingsService {
   }
 
   saveSettings(settings: RulesSettings) {
-    const { timeRemaining, innings, startingBallCount, startingStrikeCount, startingFoulCount, startingOutCount } = this;
+    const {
+      timeRemaining,
+      innings,
+      startingBallCount,
+      startingStrikeCount,
+      startingFoulCount,
+      startingOutCount,
+      maxBallCount,
+      maxStrikeCount,
+      maxFoulCount,
+      maxOutCount
+    } = this;
+
     const mergedSettings =
-      Object.assign({ timeRemaining, innings, startingBallCount, startingStrikeCount, startingFoulCount, startingOutCount }, settings);
+      Object.assign({
+        timeRemaining,
+        innings,
+        startingBallCount,
+        startingStrikeCount,
+        startingFoulCount,
+        startingOutCount,
+        maxBallCount,
+        maxStrikeCount,
+        maxFoulCount,
+        maxOutCount
+      }, settings);
 
     localStorage.setItem(this.storageKey, JSON.stringify(mergedSettings));
+  }
+
+  saveButtonClicked() {
+    this.settingsSaved.next();
   }
 }
