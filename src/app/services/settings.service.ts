@@ -93,31 +93,18 @@ export class SettingsService {
   }
 
   saveSettings(settings: RulesSettings) {
-    const {
-      timeRemaining,
-      innings,
-      startingBallCount,
-      startingStrikeCount,
-      startingFoulCount,
-      startingOutCount,
-      maxBallCount,
-      maxStrikeCount,
-      maxFoulCount,
-      maxOutCount
-    } = this;
-
     const mergedSettings =
       Object.assign({
-        timeRemaining,
-        innings,
-        startingBallCount,
-        startingStrikeCount,
-        startingFoulCount,
-        startingOutCount,
-        maxBallCount,
-        maxStrikeCount,
-        maxFoulCount,
-        maxOutCount
+        timeRemaining: this.timeRemaining,
+        innings: this.innings,
+        startingBallCount: this.startingBallCount,
+        startingStrikeCount: this.startingStrikeCount,
+        startingFoulCount: this.startingFoulCount,
+        startingOutCount: this.startingOutCount,
+        maxBallCount: this.maxBallCount,
+        maxStrikeCount: this.maxStrikeCount,
+        maxFoulCount: this.maxFoulCount,
+        maxOutCount: this.maxOutCount
       }, settings);
 
     localStorage.setItem(this.storageKey, JSON.stringify(mergedSettings));

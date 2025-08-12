@@ -5,12 +5,12 @@ import { RulesSettings } from '../types';
 import {
   AlertController,
   IonAccordion,
-  IonAccordionGroup,
+  IonAccordionGroup, IonCheckbox,
   IonInput,
   IonItem,
   IonLabel, IonList
 } from '@ionic/angular/standalone';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings-page',
@@ -22,6 +22,7 @@ import { Observable, Subscription } from 'rxjs';
     IonLabel,
     IonInput,
     IonList,
+    IonCheckbox,
   ],
   templateUrl: './settings-page.component.html',
   styleUrl: './settings-page.component.scss'
@@ -40,7 +41,7 @@ export class SettingsPageComponent {
     this.currentSettings = this.settingsService.getSettings();
     this.settingsSavedClick = this.settingsService.settingsSaved.subscribe(() => this.onSave());
 
-    const gameDuration = this.settingsService.convertTime(this.currentSettings.timeRemaining)
+    const gameDuration = this.settingsService.convertTime(this.currentSettings.timeRemaining);
 
     this.settingsForm = this.settingsFormBuilder.group({
       startingStrikeCount: this.currentSettings.startingStrikeCount,
@@ -58,6 +59,8 @@ export class SettingsPageComponent {
   }
 
   async onSave() {
+    console.log('onSave');
+
     const submittedSettings = this.settingsForm.value;
     const settingsToSave: RulesSettings =  {
       startingStrikeCount: submittedSettings.startingStrikeCount,
