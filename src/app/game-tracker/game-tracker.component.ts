@@ -51,12 +51,22 @@ export class GameTrackerComponent {
   editsService = inject(EditsTrackerService);
 
   constructor() {
+    this.getSettings();
+    this.resetBallCount();
+    this.editsService.pushAction('out', this.currentNumberOfOuts, true);
+    this.settingsService.settingsSaved.subscribe(() => this.getSettings());
+
+    addIcons({ arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp });
+  }
+
+  getSettings() {
     this.maxInnings = this.settingsService.getInnings();
     this.timeRemaining = this.settingsService.getTimeRemaining();
 
     this.startingBallCount = this.settingsService.getStartingBallCount();
     this.startingStrikeCount = this.settingsService.getStartingStrikeCount();
     this.startingFoulCount = this.settingsService.getStartingFoulCount();
+    this.startingOutCount = this.settingsService.getStartingOutCount();
 
     this.maxBallCount = this.settingsService.getMaxBallCount();
     this.maxStrikeCount = this.settingsService.getMaxStrikeCount();
@@ -64,11 +74,6 @@ export class GameTrackerComponent {
 
     this.canRedo = this.editsService.canUserUndo();
     this.canUndo = this.editsService.canUserRedo();
-
-    this.resetBallCount();
-    this.editsService.pushAction('out', this.currentNumberOfOuts, true);
-
-    addIcons({ arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp });
   }
 
   toggleTimeRemaining() {
