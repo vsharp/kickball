@@ -5,14 +5,13 @@ import { TimeRemainingPipe } from '../pipes/time-remaining.pipe';
 import { SettingsService } from "../services/settings.service";
 import { EditsTrackerService } from "../services/edits-tracker.service";
 import { CountTypes, EditType, InGameUserAction, InGameUserActionType, InningPosition } from "../types";
-import { NgForOf } from '@angular/common';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
+import { AlertController, IonButton, IonFab, IonFabButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp } from 'ionicons/icons';
+import { arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp, reloadOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-game-tracker',
-  imports: [TickerComponent, InningTickerComponent, TimeRemainingPipe, IonButton, IonIcon],
+  imports: [TickerComponent, InningTickerComponent, TimeRemainingPipe, IonButton, IonIcon, IonFab, IonFabButton],
   templateUrl: './game-tracker.component.html',
   styleUrl: './game-tracker.component.scss'
 })
@@ -49,17 +48,18 @@ export class GameTrackerComponent {
 
   settingsService = inject(SettingsService);
   editsService = inject(EditsTrackerService);
+  alertController = inject(AlertController);
 
   constructor() {
-    this.getSettings();
-    this.resetBallCount();
+    this.setInGameDefaults();
+    this.setLimitSettings();
     this.editsService.pushAction('out', this.currentNumberOfOuts, true);
-    this.settingsService.settingsSaved.subscribe(() => this.getSettings());
+    this.settingsService.settingsSaved.subscribe(() => this.setLimitSettings());
 
-    addIcons({ arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp });
+    addIcons({ arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp, reloadOutline });
   }
 
-  getSettings() {
+  setLimitSettings() {
     this.maxInnings = this.settingsService.getInnings();
     this.timeRemaining = this.settingsService.getTimeRemaining();
 
@@ -71,19 +71,70 @@ export class GameTrackerComponent {
     this.maxBallCount = this.settingsService.getMaxBallCount();
     this.maxStrikeCount = this.settingsService.getMaxStrikeCount();
     this.maxFoulCount = this.settingsService.getMaxFoulCount();
+    this.resetBallCount(false);
+  }
 
+  setInGameDefaults() {
+    this.gameInProgress = false;
+    this.awayTeamScore = 0;
+    this.homeTeamScore = 0;
+    this.currentInning = 1;
+    this.currentNumberOfOuts = 0;
+    this.currentInningPosition = 'top';
+    this.timeRemaining = 2700000;
     this.canRedo = this.editsService.canUserUndo();
     this.canUndo = this.editsService.canUserRedo();
+  }
+
+  resetBallCount(pushAction = true) {
+    //save the previous state before resetting
+    //we need to have the state right before an out happened
+    if (pushAction) {
+      this.editsService.pushAction('ball', this.currentBallsCount, true);
+      this.editsService.pushAction('strike', this.currentStrikesCount, true);
+      this.editsService.pushAction('foul', this.currentFoulsCount, true);
+    }
+
+    this.currentBallsCount = this.startingBallCount;
+    this.currentStrikesCount = this.startingStrikeCount;
+    this.currentFoulsCount = this.startingFoulCount;
+
+    if (pushAction) {
+      this.editsService.pushAction('ball', this.currentBallsCount, true);
+      this.editsService.pushAction('strike', this.currentStrikesCount, true);
+      this.editsService.pushAction('foul', this.currentFoulsCount, true);
+    }
+  }
+
+  resetGame() {
+    this.resetBallCount(false);
+    if (this.timeRemainingId) {
+      clearInterval(this.timeRemainingId);
+      this.timeRemainingId = null;
+    }
+    this.setInGameDefaults();
+    this.editsService.reset();
   }
 
   toggleTimeRemaining() {
     if (this.timeRemainingId) {
       clearInterval(this.timeRemainingId);
       this.timeRemainingId = null;
-      this.gameInProgress = false;
     } else {
-      this.timeRemainingId = setInterval(() => {
+      this.timeRemainingId = setInterval(async () => {
         this.timeRemaining -= 1000;
+        if (this.timeRemaining <= 0) {
+          if (this.timeRemainingId) {
+            clearInterval(this.timeRemainingId);
+          }
+          this.gameInProgress = false;
+          const alert = await this.alertController.create({
+            header: 'Game Clock has expired!',
+            buttons: ['OK'],
+          });
+
+          await alert.present();
+        }
       }, 1000);
       this.gameInProgress = true;
     }
@@ -192,27 +243,6 @@ export class GameTrackerComponent {
     this.resetBallCount();
   }
 
-  resetBallCount(pushAction = true) {
-    //save the previous state before resetting
-    //we need to have the state right before an out happened
-    if (pushAction) {
-      this.editsService.pushAction('ball', this.currentBallsCount, true);
-      this.editsService.pushAction('strike', this.currentStrikesCount, true);
-      this.editsService.pushAction('foul', this.currentFoulsCount, true);
-    }
-
-    this.currentBallsCount = this.startingBallCount;
-    this.currentStrikesCount = this.startingStrikeCount;
-    this.currentFoulsCount = this.startingFoulCount;
-
-    if (pushAction) {
-      // this.editsService.pushAction('resetBallCount', 1, true);
-      this.editsService.pushAction('ball', this.currentBallsCount, true);
-      this.editsService.pushAction('strike', this.currentStrikesCount, true);
-      this.editsService.pushAction('foul', this.currentFoulsCount, true);
-    }
-  }
-
   offenseScored() {
     if (this.currentInningPosition === 'top') {
       this.editsService.pushAction('awayTeamScore', this.awayTeamScore, true);
@@ -297,5 +327,26 @@ export class GameTrackerComponent {
       default:
         break;
     }
+  }
+
+  async confirmGameReset() {
+    const alert = await this.alertController.create({
+      header: 'Are you sure you want to reset the game?',
+      buttons: [
+        {
+          text: 'Yes',
+          role: 'confirm',
+          handler: ()=> {
+            this.resetGame();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        }
+      ],
+    });
+
+    await alert.present();
   }
 }

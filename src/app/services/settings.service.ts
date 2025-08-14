@@ -107,6 +107,8 @@ export class SettingsService {
         maxOutCount: this.maxOutCount
       }, settings);
 
+    Object.assign(this, mergedSettings);
+
     localStorage.setItem(this.storageKey, JSON.stringify(mergedSettings));
   }
 

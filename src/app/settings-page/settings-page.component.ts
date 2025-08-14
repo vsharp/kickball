@@ -59,8 +59,6 @@ export class SettingsPageComponent {
   }
 
   async onSave() {
-    console.log('onSave');
-
     const submittedSettings = this.settingsForm.value;
     const settingsToSave: RulesSettings =  {
       startingStrikeCount: submittedSettings.startingStrikeCount,

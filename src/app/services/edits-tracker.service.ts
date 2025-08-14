@@ -22,7 +22,7 @@ export class EditsTrackerService {
     }
 
     this.actions.push({ action, value, isBulkAction });
-    if (this.currentIndex > 0) {
+    if (this.currentIndex >= 0) {
       this.canUndo = true;
     }
 
@@ -86,5 +86,12 @@ export class EditsTrackerService {
 
   getCurrentIndex() {
     return this.currentIndex;
+  }
+
+  reset() {
+    this.actions = [];
+    this.currentIndex = -1;
+    this.canUndo = false;
+    this.canRedo = false;
   }
 }
