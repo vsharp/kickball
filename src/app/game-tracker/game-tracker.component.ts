@@ -70,7 +70,7 @@ export class GameTrackerComponent {
 
     this.maxBallCount = this.settingsService.getMaxBallCount();
     this.maxStrikeCount = this.settingsService.getMaxStrikeCount();
-    this.maxFoulCount = this.settingsService.getMaxFoulCount();
+    this.maxFoulCount = this.settingsService.getHasUnlimitedFouls() ? 999 : this.settingsService.getMaxFoulCount();
     this.resetBallCount(false);
   }
 
@@ -81,7 +81,7 @@ export class GameTrackerComponent {
     this.currentInning = 1;
     this.currentNumberOfOuts = 0;
     this.currentInningPosition = 'top';
-    this.timeRemaining = 2700000;
+    this.timeRemaining = this.settingsService.getTimeRemaining();
     this.canRedo = this.editsService.canUserUndo();
     this.canUndo = this.editsService.canUserRedo();
   }

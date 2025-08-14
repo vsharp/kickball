@@ -26,6 +26,7 @@ export interface RulesSettings {
     maxBallCount: number,
     maxStrikeCount: number,
     maxFoulCount: number,
+    hasUnlimitedFouls: boolean,
     maxOutCount: number,
 }
 
