@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { InningPosition } from '../types';
+import { InningPosition, InningPositions } from '../types';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { caretUpOutline, caretDownOutline } from 'ionicons/icons';
@@ -14,7 +14,7 @@ import { caretUpOutline, caretDownOutline } from 'ionicons/icons';
 })
 export class InningTickerComponent {
 
-  @Input() inningPosition: InningPosition = 'top';
+  @Input() inningPosition: InningPosition = InningPositions.top;
 
   @Input() currentInning  = 1;
 
@@ -22,4 +22,5 @@ export class InningTickerComponent {
     addIcons({ caretUpOutline, caretDownOutline });
   }
 
+  protected readonly InningPositions = InningPositions;
 }

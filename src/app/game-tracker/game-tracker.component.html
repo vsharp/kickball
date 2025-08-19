@@ -2,10 +2,10 @@
   <div class="score-inning">
 
     <div class="scores">
-      <app-ticker [teamVisitation]="'away'" [score]="awayTeamScore" [inningPosition]="currentInningPosition"
-                  countType="score" (tickerClicked)="onScoreClick($event)"/>
-      <app-ticker [teamVisitation]="'home'" [score]="homeTeamScore" [inningPosition]="currentInningPosition"
-                  countType="score" (tickerClicked)="onScoreClick($event)"/>
+      <app-ticker [teamVisitation]="TeamVisitationTypes.away" [score]="awayTeamScore" [inningPosition]="currentInningPosition"
+                  [countType]="CountTypes.score" (tickerClicked)="onScoreClick($event)"/>
+      <app-ticker [teamVisitation]="TeamVisitationTypes.home" [score]="homeTeamScore" [inningPosition]="currentInningPosition"
+                  [countType]="CountTypes.score" (tickerClicked)="onScoreClick($event)"/>
     </div>
 
     <div class="inning">
@@ -15,10 +15,10 @@
   </div>
 
   <div class="pitch-count">
-    <app-ticker [score]="currentBallsCount" countType="ball" (tickerClicked)="onTickerClick($event)"/>
-    <app-ticker [score]="currentStrikesCount" countType="strike" (tickerClicked)="onTickerClick($event)"/>
-    <app-ticker [score]="currentFoulsCount" countType="foul" (tickerClicked)="onTickerClick($event)"/>
-    <app-ticker class="out" [score]="currentNumberOfOuts" countType="out" (tickerClicked)="onTickerClick($event)"/>
+    <app-ticker [score]="currentBallsCount" [countType]="CountTypes.ball" (tickerClicked)="onTickerClick($event)"/>
+    <app-ticker [score]="currentStrikesCount" [countType]="CountTypes.strike" (tickerClicked)="onTickerClick($event)"/>
+    <app-ticker [score]="currentFoulsCount" [countType]="CountTypes.foul" (tickerClicked)="onTickerClick($event)"/>
+    <app-ticker class="out" [score]="currentNumberOfOuts" [countType]="CountTypes.out" (tickerClicked)="onTickerClick($event)"/>
   </div>
 
   <div class="runner-scored">
@@ -42,13 +42,13 @@
   </div>
 
   <div class="edits">
-    <ion-button [disabled]="!editsService.canUserUndo()" (click)="handleEdits('undo')">
+    <ion-button [disabled]="!editsService.canUserUndo()" (click)="handleEdits(EditTypes.undo)">
       <div>Undo</div>
       <div>
         <ion-icon name="arrow-undo-sharp"></ion-icon>
       </div>
     </ion-button>
-    <ion-button [disabled]="!editsService.canUserRedo()" (click)="handleEdits('redo')">
+    <ion-button [disabled]="!editsService.canUserRedo()" (click)="handleEdits(EditTypes.redo)">
       <div>Redo</div>
       <div>
         <ion-icon name="arrow-redo-sharp"></ion-icon>
