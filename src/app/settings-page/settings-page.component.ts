@@ -51,6 +51,7 @@ export class SettingsPageComponent {
       maxStrikeCount: this.currentSettings.maxStrikeCount,
       maxBallCount: this.currentSettings.maxBallCount,
       maxFoulCount: this.currentSettings.maxFoulCount,
+      hasUnlimitedFouls: this.currentSettings.hasUnlimitedFouls,
       maxOutCount: this.currentSettings.maxOutCount,
       numberOfInnings: this.currentSettings.innings,
       gameDuration: gameDuration.minutes,
@@ -59,8 +60,6 @@ export class SettingsPageComponent {
   }
 
   async onSave() {
-    console.log('onSave');
-
     const submittedSettings = this.settingsForm.value;
     const settingsToSave: RulesSettings =  {
       startingStrikeCount: submittedSettings.startingStrikeCount,
@@ -70,6 +69,7 @@ export class SettingsPageComponent {
       maxStrikeCount: submittedSettings.maxStrikeCount,
       maxBallCount: submittedSettings.maxBallCount,
       maxFoulCount: submittedSettings.maxFoulCount,
+      hasUnlimitedFouls: submittedSettings.hasUnlimitedFouls,
       maxOutCount: submittedSettings.maxOutCount,
       innings: submittedSettings.numberOfInnings,
       timeRemaining: submittedSettings.gameDuration * 60000,

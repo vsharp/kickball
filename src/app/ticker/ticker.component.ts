@@ -1,5 +1,14 @@
-import { Component, Input, input, InputSignal, OnChanges, Output, SimpleChanges, EventEmitter } from '@angular/core';
-import { CountType, InningPosition, TeamFieldingType, TeamVisitationType } from '../types';
+import { Component, Input, OnChanges, Output, SimpleChanges, EventEmitter } from '@angular/core';
+import {
+  CountType,
+  CountTypes,
+  InningPosition,
+  InningPositions,
+  TeamFieldingType,
+  TeamFieldingTypes,
+  TeamVisitationType,
+  TeamVisitationTypes
+} from '../types';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { caretDownOutline } from 'ionicons/icons';
@@ -12,17 +21,17 @@ import { caretDownOutline } from 'ionicons/icons';
 })
 export class TickerComponent implements OnChanges {
   @Input() score = 0;
-  // score = input(0);
-  currentTeamFieldingType: TeamFieldingType = 'defense';
-  // @Input() currentTeamFieldingType: 'offense' | 'defense' = 'defense';
-  @Input() inningPosition: InningPosition = 'top';
-  // public currentTeamFieldingType: InputSignal<string> = input('offense');
-  // 'offense' | 'defense'
-  @Input() teamVisitation: TeamVisitationType = 'home';
-
+  @Input() inningPosition: InningPosition = InningPositions.top;
+  @Input() teamVisitation: TeamVisitationType = TeamVisitationTypes.home;
   @Input() countType!: CountType;
 
   @Output() tickerClicked = new EventEmitter();
+
+  protected readonly TeamVisitationTypes = TeamVisitationTypes;
+  protected readonly TeamFieldingTypes = TeamFieldingTypes;
+  protected readonly CountTypes = CountTypes;
+
+  currentTeamFieldingType: TeamFieldingType = TeamFieldingTypes.defense;
 
   constructor() {
     addIcons({ caretDownOutline });
@@ -34,24 +43,24 @@ export class TickerComponent implements OnChanges {
 
   getCurrentFielding() {
     if (
-      (this.inningPosition === 'top' && this.teamVisitation === 'away') ||
-      (this.inningPosition === 'bottom' && this.teamVisitation === 'home')
+      (this.inningPosition === InningPositions.top && this.teamVisitation === TeamVisitationTypes.away) ||
+      (this.inningPosition === InningPositions.bottom && this.teamVisitation === TeamVisitationTypes.home)
     ) {
-      this.currentTeamFieldingType = 'offense';
+      this.currentTeamFieldingType = TeamFieldingTypes.offense;
     } else {
-      this.currentTeamFieldingType = 'defense';
+      this.currentTeamFieldingType = TeamFieldingTypes.defense;
     }
   }
 
   getCountTypeLabel() {
     switch (this.countType) {
-      case 'strike':
+      case CountTypes.strike:
         return 'Strikes';
-      case 'ball':
+      case CountTypes.ball:
         return 'Balls';
-      case 'foul':
+      case CountTypes.foul:
         return 'Fouls';
-      case 'out':
+      case CountTypes.out:
         return 'Outs';
       default:
         return '';

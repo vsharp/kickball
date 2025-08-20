@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CountType, EditType, InGameUserAction, InGameUserActionType } from '../types';
+import { EditType, EditTypes, InGameUserAction, InGameUserActionType } from '../types';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class EditsTrackerService {
     }
 
     this.actions.push({ action, value, isBulkAction });
-    if (this.currentIndex > 0) {
+    if (this.currentIndex >= 0) {
       this.canUndo = true;
     }
 
@@ -41,7 +41,7 @@ export class EditsTrackerService {
 
   traverseActions(editType: EditType) {
     let action: InGameUserAction | null = null;
-    if (editType === 'undo') {
+    if (editType === EditTypes.undo) {
       if (this.currentIndex > -1) {
         action = this.actions[--this.currentIndex];
         //if you undo, of course you can redo after
@@ -66,7 +66,7 @@ export class EditsTrackerService {
   }
 
   isNextActionBulkAction(editType: EditType): boolean {
-    if (editType === 'undo') {
+    if (editType === EditTypes.undo) {
       return this.actions[this.currentIndex - 1]?.isBulkAction || false;
     }
     return this.actions[this.currentIndex + 1]?.isBulkAction || false;
@@ -86,5 +86,12 @@ export class EditsTrackerService {
 
   getCurrentIndex() {
     return this.currentIndex;
+  }
+
+  reset() {
+    this.actions = [];
+    this.currentIndex = -1;
+    this.canUndo = false;
+    this.canRedo = false;
   }
 }

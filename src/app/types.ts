@@ -1,8 +1,23 @@
 export type InningPosition = 'top' | 'bottom';
 
+export enum InningPositions {
+  top = 'top',
+  bottom = 'bottom',
+}
+
 export type TeamVisitationType = 'home' | 'away';
 
+export enum TeamVisitationTypes {
+  home = 'home',
+  away = 'away',
+}
+
 export type TeamFieldingType = 'offense' | 'defense';
+
+export enum TeamFieldingTypes {
+  offense = 'offense',
+  defense = 'defense',
+}
 
 export type CountType = 'strike' | 'ball' | 'foul' | 'out' | 'score';
 
@@ -11,7 +26,11 @@ export enum CountTypes {
     ball = 'ball',
     foul = 'foul',
     out = 'out',
+    inning = 'inning',
+    inningPosition = 'inningPosition',
     score = 'score',
+    awayTeamScore = 'awayTeamScore',
+    homeTeamScore = 'homeTeamScore',
 }
 
 // export type RulesSettings = 'timeRemaining' | 'innings' | 'startingBallCount' | 'startingStrikeCount';
@@ -26,6 +45,7 @@ export interface RulesSettings {
     maxBallCount: number,
     maxStrikeCount: number,
     maxFoulCount: number,
+    hasUnlimitedFouls: boolean,
     maxOutCount: number,
 }
 
@@ -38,3 +58,8 @@ export interface InGameUserAction {
 }
 
 export type EditType = 'undo' | 'redo';
+
+export enum EditTypes {
+  undo = 'undo',
+  redo = 'redo',
+}

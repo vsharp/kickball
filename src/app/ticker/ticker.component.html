@@ -1,14 +1,14 @@
 <ion-button (click)="onTickerClick($event)">
 
   <div class="score-ticker count-type-{{countType}}">
-  @if (currentTeamFieldingType === 'offense') {
+  @if (currentTeamFieldingType === TeamFieldingTypes.offense) {
     <div class="team-on-offense">
       <ion-icon name="caret-down-outline" />
     </div>
   }
 
-  @if (countType === 'score') {
-    <div class="team-visitation">{{teamVisitation === 'home' ? 'Home' : 'Away'}}</div>
+  @if (countType === CountTypes.score) {
+    <div class="team-visitation">{{teamVisitation === TeamVisitationTypes.home ? 'Home' : 'Away'}}</div>
   } @else {
     <div class="count-type">{{ getCountTypeLabel() }}</div>
   }

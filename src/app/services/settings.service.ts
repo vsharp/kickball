@@ -17,6 +17,7 @@ export class SettingsService {
   maxBallCount = 4;
   maxStrikeCount = 3;
   maxFoulCount = 4;
+  hasUnlimitedFouls = false;
   maxOutCount = 3;
 
   settingsSaved: Subject<void> = new Subject<void>();
@@ -37,6 +38,7 @@ export class SettingsService {
     this.maxBallCount = mergedSettings.maxBallCount;
     this.maxStrikeCount = mergedSettings.maxStrikeCount;
     this.maxFoulCount = mergedSettings.maxFoulCount;
+    this.hasUnlimitedFouls = mergedSettings.hasUnlimitedFouls;
     this.maxOutCount = mergedSettings.maxOutCount;
   }
 
@@ -76,6 +78,10 @@ export class SettingsService {
     return this.maxFoulCount;
   }
 
+  getHasUnlimitedFouls() {
+    return this.hasUnlimitedFouls;
+  }
+
   getSettings(): RulesSettings {
     const storedSettings = JSON.parse(<string>localStorage.getItem(this.storageKey));
     const mergedSettings = Object.assign({}, this, storedSettings);
@@ -104,8 +110,11 @@ export class SettingsService {
         maxBallCount: this.maxBallCount,
         maxStrikeCount: this.maxStrikeCount,
         maxFoulCount: this.maxFoulCount,
+        hasUnlimitedFouls: this.hasUnlimitedFouls,
         maxOutCount: this.maxOutCount
       }, settings);
+
+    Object.assign(this, mergedSettings);
 
     localStorage.setItem(this.storageKey, JSON.stringify(mergedSettings));
   }
