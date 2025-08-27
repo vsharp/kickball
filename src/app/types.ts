@@ -33,8 +33,6 @@ export enum CountTypes {
     homeTeamScore = 'homeTeamScore',
 }
 
-// export type RulesSettings = 'timeRemaining' | 'innings' | 'startingBallCount' | 'startingStrikeCount';
-
 export interface RulesSettings {
     timeRemaining: number,
     innings: number,
@@ -62,4 +60,14 @@ export type EditType = 'undo' | 'redo';
 export enum EditTypes {
   undo = 'undo',
   redo = 'redo',
+}
+
+export interface TeamInfo {
+  id: number;
+  name: string;
+  color: string;
+}
+
+export interface TeamsListing {
+  teams: TeamInfo[];
 }

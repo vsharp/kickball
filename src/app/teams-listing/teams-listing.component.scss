@@ -1,0 +1,18 @@
+.team-listing {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.team-name {
+  //flex: 1;
+}
+
+.team-color {
+  width: 20px;
+  height: 20px;
+}
+
+.team-settings {
+  display: none;
+}
