@@ -10,16 +10,26 @@ import {
   EditTypes,
   InningPosition,
   InningPositions,
-  TeamFieldingTypes,
+  TeamFieldingTypes, TeamInfo, TeamVisitationType,
   TeamVisitationTypes
 } from '../types';
-import { AlertController, IonButton, IonFab, IonFabButton, IonIcon } from '@ionic/angular/standalone';
+import {
+  AlertController,
+  IonButton,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonPopover,
+  IonSelect, IonSelectOption
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp, reloadOutline } from 'ionicons/icons';
+import { TeamsListingService } from '../services/teams-listing.service';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-game-tracker',
-  imports: [TickerComponent, InningTickerComponent, TimeRemainingPipe, IonButton, IonIcon, IonFab, IonFabButton],
+  imports: [TickerComponent, InningTickerComponent, TimeRemainingPipe, IonButton, IonIcon, IonFab, IonFabButton, IonPopover, IonSelect, IonSelectOption, NgTemplateOutlet],
   templateUrl: './game-tracker.component.html',
   styleUrl: './game-tracker.component.scss'
 })
@@ -35,6 +45,13 @@ export class GameTrackerComponent {
   public canUndo = false;
   public canRedo = false;
   public gameInProgress = false;
+  public isHomeTeamPopoverOpen = false;
+  public isAwayTeamPopoverOpen = false;
+  public teams: TeamInfo[] = [];
+  public awayTeamName = '';
+  public homeTeamName = '';
+  public awayTeamColor: string | undefined;
+  public homeTeamColor: string | undefined;
 
   public weDebuggingOrNah = false;
 
@@ -57,6 +74,7 @@ export class GameTrackerComponent {
   private settingsService = inject(SettingsService);
   editsService = inject(EditsTrackerService);
   private alertController = inject(AlertController);
+  private teamsListingService = inject(TeamsListingService);
 
   protected readonly TeamVisitationTypes = TeamVisitationTypes;
   protected readonly CountTypes = CountTypes;
@@ -67,6 +85,7 @@ export class GameTrackerComponent {
     this.setLimitSettings();
     this.editsService.pushAction(CountTypes.out, this.currentNumberOfOuts, true);
     this.settingsService.settingsSaved.subscribe(() => this.setLimitSettings());
+    this.teams = this.teamsListingService.getTeams();
 
     addIcons({ arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp, reloadOutline });
   }
@@ -360,4 +379,20 @@ export class GameTrackerComponent {
 
     await alert.present();
   }
+
+  onTeamSelectChange(evt: CustomEvent, visitationType: TeamVisitationType) {
+    const teamName = evt.detail.value;
+    const selectedTeam = this.teams.find((team) => team.name === teamName);
+
+    if (visitationType === 'away') {
+      this.isAwayTeamPopoverOpen = false;
+      this.awayTeamName = teamName;
+      this.awayTeamColor = selectedTeam?.color;
+    } else {
+      this.isHomeTeamPopoverOpen = false;
+      this.homeTeamName = teamName;
+      this.homeTeamColor = selectedTeam?.color;
+    }
+  }
+
 }

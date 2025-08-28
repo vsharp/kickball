@@ -1,6 +1,6 @@
 <ion-button (click)="onTickerClick($event)">
 
-  <div class="score-ticker count-type-{{countType}}">
+  <div class="score-ticker count-type-{{countType}}" [style.background-color]="bgColor ?? bgColor">
     @if (currentTeamFieldingType === TeamFieldingTypes.offense) {
       <div class="team-on-offense">
         <ion-icon name="caret-down-outline" />
