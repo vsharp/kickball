@@ -76,7 +76,7 @@
 </div>
 
 <ng-template #teamSelector let-visitationType="visitationType">
-  <ion-select interface="action-sheet" (ionChange)="onTeamSelectChange($event, visitationType)">
+  <ion-select interface="action-sheet" (ionChange)="onTeamSelectChange($event, visitationType)" (ionCancel)="isAwayTeamPopoverOpen = false; isHomeTeamPopoverOpen = false">
     <ion-select-option value=""></ion-select-option>
     @for (team of teams; track $index;) {
       <ion-select-option value="{{team.name}}">{{ team.name }}</ion-select-option>

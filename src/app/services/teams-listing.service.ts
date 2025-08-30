@@ -31,14 +31,18 @@ export class TeamsListingService {
   setTeam(team: TeamInfo) {
     if (!team?.id && team?.id != 0) {
       team.id = this.teams.length;
+      this.teams.push(team);
+    } else {
+      const selectedTeamIndex = this.teams.findIndex((existingTeam) => team.id === existingTeam.id);
+      this.teams[selectedTeamIndex] = team;
     }
-    this.teams[team.id] = team;
 
     this.saveTeams();
   }
 
   removeTeam(team: TeamInfo) {
-    this.teams.splice(team.id, 1);
+    const selectedTeamIndex = this.teams.findIndex((existingTeam) => team.id === existingTeam.id);
+    this.teams.splice(selectedTeamIndex, 1);
     this.saveTeams();
   }
 }

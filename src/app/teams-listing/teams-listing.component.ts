@@ -9,7 +9,7 @@ import {
   IonHeader,
   IonIcon,
   IonInput,
-  IonItem, IonItemOption, IonItemOptions, IonItemSliding,
+  IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel,
   IonList,
   IonModal, IonTitle, IonToolbar
 } from '@ionic/angular/standalone';
@@ -17,6 +17,7 @@ import { addIcons } from 'ionicons';
 import { addOutline, trash } from 'ionicons/icons';
 import { TeamInfo } from '../types';
 import { TeamsListingService } from '../services/teams-listing.service';
+import { ColorPickerDirective } from 'ngx-color-picker';
 
 @Component({
   selector: 'app-teams-listing',
@@ -40,7 +41,9 @@ import { TeamsListingService } from '../services/teams-listing.service';
     IonContent,
     IonItemSliding,
     IonItemOptions,
-    IonItemOption
+    IonItemOption,
+    ColorPickerDirective,
+    IonLabel
   ]
 })
 export class TeamsListingComponent {
@@ -53,6 +56,7 @@ export class TeamsListingComponent {
 
   teams: TeamInfo[] = [];
   selectedTeam: TeamInfo | null = null;
+  teamColor = '#FFFFFF';
 
   teamsListingService = inject(TeamsListingService);
   alertController = inject(AlertController);
@@ -68,7 +72,12 @@ export class TeamsListingComponent {
     this.selectedTeam = null;
   }
 
-  async editTeam(type: 'add' | 'update' | 'remove', team?: TeamInfo | null) {
+  onColorSelected(selectedColor: string) {
+    this.teamColor = selectedColor;
+    this.teamsListingForm.patchValue({ color: this.teamColor });
+  }
+
+  async onEditTeamClick(type: 'add' | 'update' | 'remove', team?: TeamInfo | null) {
     if (type === 'remove' && team) {
       const alert = await this.alertController.create({
         header: 'Remove Team?',
@@ -102,11 +111,12 @@ export class TeamsListingComponent {
         name: team?.name,
         color: team?.color,
       });
+      this.teamColor = team?.color || '#FFFFFF';
       this.isModalOpen = true;
     }
   }
 
-  async onTeamEdit() {
+  async onTeamSaveClick() {
     const updatedTeamInfo = this.teamsListingForm.value;
     this.isModalOpen = false;
 

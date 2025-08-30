@@ -85,6 +85,7 @@ export class GameTrackerComponent {
     this.setLimitSettings();
     this.editsService.pushAction(CountTypes.out, this.currentNumberOfOuts, true);
     this.settingsService.settingsSaved.subscribe(() => this.setLimitSettings());
+    this.teamsListingService.teamsListingSaved.subscribe(() => this.handleTeamsListingChange());
     this.teams = this.teamsListingService.getTeams();
 
     addIcons({ arrowRedoSharp, arrowUndoSharp, pauseSharp, playSharp, reloadOutline });
@@ -145,6 +146,14 @@ export class GameTrackerComponent {
     }
     this.setInGameDefaults();
     this.editsService.reset();
+  }
+
+  handleTeamsListingChange() {
+    this.teams = this.teamsListingService.getTeams();
+    this.awayTeamName = '';
+    this.homeTeamName = '';
+    this.awayTeamColor = '';
+    this.homeTeamColor = '';
   }
 
   toggleTimeRemaining() {
