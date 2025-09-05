@@ -24,6 +24,9 @@ export class TickerComponent implements OnChanges {
   @Input() inningPosition: InningPosition = InningPositions.top;
   @Input() teamVisitation: TeamVisitationType = TeamVisitationTypes.home;
   @Input() countType!: CountType;
+  @Input() marqueeText: string = '';
+  @Input() marqueeDurationSec: number = 8; // animation duration in seconds
+  @Input() bgColor: string | undefined;
 
   @Output() tickerClicked = new EventEmitter();
 

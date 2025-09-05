@@ -3,9 +3,9 @@
 
     <div class="scores">
       <app-ticker [teamVisitation]="TeamVisitationTypes.away" [score]="awayTeamScore" [inningPosition]="currentInningPosition"
-                  [countType]="CountTypes.score" (tickerClicked)="onScoreClick($event)"/>
+                  [countType]="CountTypes.score" (tickerClicked)="onScoreClick($event)" id="away-team-picker" [marqueeText]="awayTeamName" [bgColor]="awayTeamColor" />
       <app-ticker [teamVisitation]="TeamVisitationTypes.home" [score]="homeTeamScore" [inningPosition]="currentInningPosition"
-                  [countType]="CountTypes.score" (tickerClicked)="onScoreClick($event)"/>
+                  [countType]="CountTypes.score" (tickerClicked)="onScoreClick($event)" id="home-team-picker" [marqueeText]="homeTeamName" [bgColor]="homeTeamColor" />
     </div>
 
     <div class="inning">
@@ -74,3 +74,25 @@
 
   <div class="end-of-content"></div>
 </div>
+
+<ng-template #teamSelector let-visitationType="visitationType">
+  <ion-select interface="action-sheet" (ionChange)="onTeamSelectChange($event, visitationType)" (ionCancel)="isAwayTeamPopoverOpen = false; isHomeTeamPopoverOpen = false">
+    <ion-select-option value=""></ion-select-option>
+    @for (team of teams; track $index;) {
+      <ion-select-option value="{{team.name}}">{{ team.name }}</ion-select-option>
+    }
+  </ion-select>
+</ng-template>
+
+<ion-popover trigger="away-team-picker" triggerAction="context-menu" [isOpen]="isAwayTeamPopoverOpen" (didPresent)="isAwayTeamPopoverOpen = true">
+  @if (isAwayTeamPopoverOpen) {
+    <ng-container *ngTemplateOutlet="teamSelector; context: { visitationType: 'away'}"></ng-container>
+  }
+</ion-popover>
+
+<ion-popover trigger="home-team-picker" triggerAction="context-menu" [isOpen]="isHomeTeamPopoverOpen" (didPresent)="isHomeTeamPopoverOpen = true">
+  @if (isHomeTeamPopoverOpen) {
+    <ng-container *ngTemplateOutlet="teamSelector; context: { visitationType: 'home'}"></ng-container>
+  }
+</ion-popover>
+

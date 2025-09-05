@@ -24,6 +24,37 @@
     position: absolute;
     top: -5px;
   }
+
+  /* Marquee area occupies a thin strip at the bottom; adjust as needed */
+  .marquee {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    height: 1.2em;
+    margin-top: 4px;
+  }
+
+  .marquee-inner {
+    display: inline-flex;
+    white-space: nowrap;
+    will-change: transform;
+    animation-name: marquee;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  .marquee-text {
+    padding-right: 2rem; /* spacing between repeated text */
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 ion-button {

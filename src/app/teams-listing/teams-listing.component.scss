@@ -1,0 +1,24 @@
+.team-listing {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.team-color {
+  width: 20px;
+  height: 20px;
+}
+
+.team-settings {
+  display: none;
+}
+
+.color-picker {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.color-picker-container {
+  display: flex;
+}

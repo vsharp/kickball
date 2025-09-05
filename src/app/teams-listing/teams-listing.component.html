@@ -1,0 +1,66 @@
+<div class="ion-padding">
+
+  <ion-list>
+
+    @for(team of teams; let i = $index; track i) {
+      <ion-item-sliding>
+
+        <ion-item>
+          <div class="team-listing" (click)="onEditTeamClick('update', team)">
+            <div class="team-name">{{ team.name }}</div>
+            <div class="team-color" style="background-color: {{ team.color }}"></div>
+          </div>
+        </ion-item>
+
+        <ion-item-options>
+          <ion-item-option color="danger" (click)="onEditTeamClick('remove', team)">
+            <ion-icon slot="bottom" name="trash"></ion-icon>
+            Delete
+          </ion-item-option>
+        </ion-item-options>
+
+      </ion-item-sliding>
+    }
+
+  </ion-list>
+</div>
+
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab-button size="small" aria-label="Add Team" (click)="onEditTeamClick('add')">
+    <ion-icon id="open-modal" name="add-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-title>Team Info</ion-title>
+        @if (selectedTeam) {
+          <ion-buttons slot="end">
+            <ion-button (click)="onEditTeamClick('remove', selectedTeam)">Remove</ion-button>
+          </ion-buttons>
+        }
+        <ion-buttons slot="end">
+          <ion-button (click)="onTeamSaveClick()" [strong]="true">Save</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+
+      <form [formGroup]="teamsListingForm">
+
+        <input type="hidden" formControlName="id" />
+        <input type="hidden" formControlName="color" />
+
+        <ion-input label="Team Name" formControlName="name"></ion-input>
+        <ion-label>Team Color</ion-label>
+        <div class="color-picker" [(colorPicker)]="teamColor" [cpOKButton]="true" [cpCancelButton]="true" [style.background]="teamColor" (colorPickerSelect)="onColorSelected($event)"></div>
+
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

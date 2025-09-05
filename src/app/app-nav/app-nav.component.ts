@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   IonIcon,
   IonLabel,
@@ -7,7 +7,7 @@ import {
   IonTabs,
 } from '@ionic/angular/standalone';
 import { addIcons } from "ionicons";
-import { gameControllerOutline, settingsOutline } from 'ionicons/icons';
+import { gameControllerOutline, settingsOutline, listOutline } from 'ionicons/icons';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -26,7 +26,7 @@ import { RouterLink } from '@angular/router';
 export class AppNavComponent {
 
   constructor() {
-    addIcons({ gameControllerOutline, settingsOutline });
+    addIcons({ gameControllerOutline, settingsOutline, listOutline });
   }
 
 }
